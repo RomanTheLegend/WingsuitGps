@@ -8,7 +8,7 @@
 #include "utilities.h"
 
 //#define _DEBUG
-
+const uint8_t vbatPin = 34;
 
 U8G2_SSD1309_128X64_NONAME2_F_4W_SW_SPI u8g2(U8G2_R0,
         /* clock=*/ OLED_SCLK,
@@ -20,7 +20,9 @@ U8G2_SSD1309_128X64_NONAME2_F_4W_SW_SPI u8g2(U8G2_R0,
 TinyGPS gps;
 HardwareSerial SerialGPS ( 1 );
 
+float VBAT= 0; // battery voltage from ESP32 ADC read
 
+volatile int random_speed = 140;
 
 void setup()
 {
@@ -37,14 +39,15 @@ void setup()
   pinMode(OLED_PWR, OUTPUT);
   digitalWrite(OLED_PWR, HIGH);
 
+  pinMode(vbatPin, INPUT);
+
   /*Set touch Pin as input*/
   pinMode(TOUCH_PIN, INPUT);
 
   u8g2.begin();
 
   u8g2.enableUTF8Print(); // enable UTF8 support for the Arduino print() function
-
-
+ 
   Serial.println("initialization done.");
   Serial.println("Ready");
 
@@ -69,23 +72,22 @@ void loop()
   byte hunds;
 
   // For one second we parse GPS data and report some key values
-  for (unsigned long start = millis(); millis() - start < 1000;)
+  for (unsigned long start = millis(); millis() - start < 250;)
   {
     while (SerialGPS.available())
     {
       char c = SerialGPS.read();
-      Serial.write(c); // uncomment this line if you want to see the GPS data flowing
+      //Serial.write(c); // uncomment this line if you want to see the GPS data flowing
       if (gps.encode(c)) // Did a new valid sentence come in?
         newData = true;        
     }
   }
 
-
   if (newData)
   {
     gps.f_get_position(&flat, &flon, &age);
     gps.crack_datetime(&YY, &MM, &DD, &hrs, &mins, &secs, &hunds, &age);
-    altit = gps.altitude();
+    //altit = gps.altitude();
 
 
 
@@ -101,24 +103,73 @@ void loop()
     Serial.println();
 #endif
     displaySpeed(gps.f_speed_kmph());
-    delay(500);
+
 //    displayCourse(gps.f_course());
+  } else {
+    //displayStats();
+    //displayRandomSpeed();
   }
 
-//  Serial.print(" SAT=");
-//  Serial.println(gps.satellites() == TinyGPS::GPS_INVALID_SATELLITES ? 0 : gps.satellites());
-  
   gps.stats(&chars, &sentences, &failed);
   if (chars == 0) {
     Serial.println("** No characters received from GPS: check wiring **");    
   }
 }
 
+
+void displayStats() {
+
+  VBAT = (float)(analogRead(vbatPin)) * 3600 / 4095 * 2 / 1000;
+
+  u8g2.setFont(u8g2_font_t0_11_mf   );  
+  u8g2.setFontDirection(0);
+  u8g2.clearBuffer();
+  u8g2.setCursor(0, 10);
+  u8g2.println("Vbat = ");
+  u8g2.print(VBAT,2);
+  u8g2.println(" Volts");
+
+  u8g2.setCursor(0, 40);
+  u8g2.print(" SAT=");
+  u8g2.println(gps.satellites() == TinyGPS::GPS_INVALID_SATELLITES ? 0 : gps.satellites());
+
+  u8g2.sendBuffer();
+  delay(250);
+}
+
+
+void displayMiniStats() {
+  VBAT = (float)(analogRead(vbatPin)) * 3600 / 4095 * 2 / 1000;
+  u8g2.setFont(u8g2_font_profont11_mf  );  
+  u8g2.setFontDirection(3);
+  u8g2.setCursor(125, 55);
+  u8g2.print(VBAT,1);
+  u8g2.print("v ");
+  u8g2.print(gps.satellites() == TinyGPS::GPS_INVALID_SATELLITES ? 0 : gps.satellites());
+  u8g2.println("¤");  
+}
+
+
+void displayRandomSpeed(){
+    int randNumber = random(3);
+    if (random_speed < randNumber){
+        random_speed = random_speed + randNumber;
+    } else {
+      int direction =  random(4);
+      if (direction > 1){
+        random_speed = random_speed + randNumber;        
+      } else {
+        random_speed = random_speed - randNumber;
+      }
+    }
+    
+    displaySpeed(random_speed);
+}
+
+
 void displaySpeed(float spd) {
   //spd = 172.1;
   int ispd = int(spd);
-  
-  //byte satelites = byte( (gps.satellites() == TinyGPS::GPS_INVALID_SATELLITES ? 0 : gps.satellites()) %10);
 
   u8g2.setFont(u8g2_font_inb46_mn);  
   u8g2.setFontDirection(0);
@@ -128,28 +179,22 @@ void displaySpeed(float spd) {
   //u8g2.setFont(u8g2_font_unifont_t_chinese2); 
   //u8g2.setCursor(95, 40);
   //u8g2.print("km/h");
+  displayMiniStats();
   u8g2.sendBuffer();
-
+  delay(250);
 }
-/*
+
+
 void displayCourse(float course) {
   //course = 270.8;
   int icourse = int(course);
-  
-  // Split the degrees into digits
-  byte digit2 = byte((icourse / 100) % 10);
-  byte digit1 = byte((icourse / 10) % 10);
-  byte digit0 = byte((icourse % 10));
-  tm.clearDisplay();
-  // Display the data and also implement Leading-Zero Blanking (LZB)
-
-  tm.display(0,'_');
-
-  tm.display(3,digit0);
-  if(course > 9.99)
-    tm.display(2,digit1);
-  if(course > 99.99)
-    tm.display(1,digit2);
+  u8g2.setFont(u8g2_font_inb46_mn);  
+  u8g2.setFontDirection(0);
+  u8g2.clearBuffer();
+  u8g2.setCursor(0, 50);
+  u8g2.print(icourse);
+  u8g2.sendBuffer();
+  delay(250);
 }
-*/
+
 
