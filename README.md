@@ -1,8 +1,9 @@
-#Project Orion
+# Project Orion
 
 ![Helmet assembly with display on](images/helmet_assembed.jpg "Helmet assembly with display on")
 
 A GPS-based HUD with programmable output designed to aid in wingsuit flying. At present it displays horisontal speed (km/h) but can be programmed to display more. Possibilities (in future code releases):
+
 Basic:
 * Vertical speed
 * Total speed
@@ -34,5 +35,9 @@ Advanced:
 * Remove P6 port (unsolder)
 * Solder GPS RX/TX as shown below:
 ![Helmet wiring diagram](images/wiring_001.png "Helmet wiring diagram")
+* 3D print basic models for enclosure (board goes USB-C port pointing downwards, with flex cable gently stretched)
 
-* 3D print basic models for enclosure
+![3D drawing of display frame](images/display_mainboard_frame.png "3D drawing of display frame")
+
+## How To
+* [Install ESP32 board support in Arduino ](https://microcontrollerslab.com/install-esp32-arduino-ide/)
