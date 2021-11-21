@@ -6,9 +6,28 @@
 #include <Wire.h>
 #include <U8g2lib.h>
 #include "utilities.h"
+#include "Button2.h"
+#include <EEPROM.h>
 
 //#define _DEBUG
+
+#define BUTTON_UP     12
+#define BUTTON_ENTER  13
+#define BUTTON_DOWN   17
+#define EEPROM_SIZE   1
+#define MENU_POSITIONS 4
+
+char* menu_items[] = {
+  "Vertical speed",
+  "Horizontal speed",
+  "Total speed",
+  "Heading"
+};
+
+
 const uint8_t vbatPin = 34;
+
+
 
 U8G2_SSD1309_128X64_NONAME2_F_4W_SW_SPI u8g2(U8G2_R0,
         /* clock=*/ OLED_SCLK,
@@ -19,10 +38,64 @@ U8G2_SSD1309_128X64_NONAME2_F_4W_SW_SPI u8g2(U8G2_R0,
 
 TinyGPS gps;
 HardwareSerial SerialGPS ( 1 );
+Button2 button_up(BUTTON_UP);
+Button2 button_enter(BUTTON_ENTER);
+Button2 button_down(BUTTON_DOWN);
+
+bool commit=false;
+byte cursor_position=1;
 
 float VBAT= 0; // battery voltage from ESP32 ADC read
 
 volatile int random_speed = 140;
+
+void move_cursor(int direction){
+  // up = 1
+  // down = 2
+
+  if (direction==2){
+    Serial.println(cursor_position);    
+    if (cursor_position < MENU_POSITIONS){
+      cursor_position++;
+    } else {
+      cursor_position=1;
+    }
+  } else {
+    if (cursor_position != 1){
+      cursor_position--;
+    } else {
+      cursor_position=MENU_POSITIONS;
+    }
+  }
+}
+
+void button_init()
+{
+    button_up.setTapHandler([](Button2 & b) {
+        Serial.println("Up"); 
+        move_cursor(1);
+    });
+
+
+    button_enter.setLongClickTime(4000);
+    button_enter.setLongClickDetectedHandler([](Button2 & b) {
+        Serial.println("Enter long hold");
+        menu_loop();
+    });
+
+    button_enter.setTapHandler([](Button2 & b) {
+        Serial.println("Enter");
+        move_cursor(2);
+        //menu_loop();
+    });
+
+    
+    button_down.setTapHandler([](Button2 & b) {
+        Serial.println("Down");
+        //move_cursor(2);
+    });
+}
+
 
 void setup()
 {
@@ -48,10 +121,36 @@ void setup()
 
   u8g2.enableUTF8Print(); // enable UTF8 support for the Arduino print() function
  
+  //EEPROM.begin(EEPROM_SIZE);
+  //clickCounter = EEPROM.read(0);
+
+  button_init();
+ 
   Serial.println("initialization done.");
   Serial.println("Ready");
 
-  displaySpeed(0);
+  //displaySpeed(0);
+}
+
+void button_loop()
+{
+    button_up.loop();
+    button_enter.loop();
+    button_down.loop();
+}
+
+
+void menu_loop(){
+  Serial.write(0x0C);
+  for (int i=0; i< MENU_POSITIONS; i++){
+    char buffer[25];
+    if (i+1==cursor_position){
+      sprintf(buffer, "* %s", menu_items[i]);
+    }  else {
+      sprintf(buffer, "  %s", menu_items[i]);
+    }    
+    Serial.println(buffer);
+  }
 }
 
 void loop()
@@ -102,7 +201,7 @@ void loop()
     Serial.print(gps.hdop() == TinyGPS::GPS_INVALID_HDOP ? 0 : gps.hdop());
     Serial.println();
 #endif
-    displaySpeed(gps.f_speed_kmph());
+    //displaySpeed(gps.f_speed_kmph());
 
 //    displayCourse(gps.f_course());
   } else {
@@ -114,6 +213,9 @@ void loop()
   if (chars == 0) {
     Serial.println("** No characters received from GPS: check wiring **");    
   }
+
+  button_loop();
+  displayMenu();
 }
 
 
@@ -198,3 +300,23 @@ void displayCourse(float course) {
 }
 
 
+void displayMenu(){
+
+  u8g2.setFont(u8g2_font_t0_11_mf   );  
+  u8g2.setFontDirection(0);
+  u8g2.clearBuffer();  
+  
+
+  for (int i=0; i< MENU_POSITIONS; i++){
+    char buffer[25];
+    if (i+1==cursor_position){
+      sprintf(buffer, "* %s", menu_items[i]);
+    }  else {
+      sprintf(buffer, "  %s", menu_items[i]);
+    }    
+    u8g2.setCursor(0, (i+1)*10);
+    u8g2.println(buffer);
+  }
+  u8g2.sendBuffer();
+  delay(250);
+}
