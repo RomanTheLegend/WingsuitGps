@@ -5,6 +5,7 @@
 #include "modes/ModeManager.hpp"
 #include "modules/ButtonInterface.hpp"
 #include "modules/GpsInterface.hpp"
+#include "modules/BluetoothInterface.hpp"
 
 #define EEPROM_SIZE   1
 #define TX_PIN 27
@@ -20,6 +21,7 @@ void setup()
   Serial.println("Starting up");
   GhudDevice::init();
   GpsInterface::init( TX_PIN , RX_PIN );
+  BluetoothInterface::init();
   ButtonInterface::init();
   ModeManager::init();
   ButtonInterface::setCallback(&processButtonInput);

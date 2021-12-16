@@ -4,6 +4,7 @@
 #include <SPI.h>
 #include <Wire.h>
 #include "GpsInterface.hpp"
+#include "BluetoothInterface.hpp"
 
 TinyGPS gps;
 
@@ -50,6 +51,7 @@ namespace GpsInterface {
       while (SerialGPS.available())
       {
         char c = SerialGPS.read();
+        BluetoothInterface::sendData(c);
         //Serial.write(c); // uncomment this line if you want to see the GPS data flowing
         if (gps.encode(c)) // Did a new valid sentence come in?
           newData = true;        
@@ -63,7 +65,7 @@ namespace GpsInterface {
 
       sprintf(dateString, "%02d/%02d/%02d %02d:%02d:%02d.%03u",
         MM, DD, YY, hrs, mins, secs, hunds);  
-      Serial.print("Lat="); Serial.print(flat,6);  Serial.print(" Lon=");  Serial.print(flon,6); Serial.print(" Date="); Serial.print(dateString); Serial.print(" Sat="); Serial.print(gps.satellites()); Serial.print(" hdop="); Serial.println(gps.hdop());
+      //Serial.print("Lat="); Serial.print(flat,6);  Serial.print(" Lon=");  Serial.print(flon,6); Serial.print(" Date="); Serial.print(dateString); Serial.print(" Sat="); Serial.print(gps.satellites()); Serial.print(" hdop="); Serial.println(gps.hdop());
 
   #ifdef _DEBUG    
       Serial.print("LAT=");

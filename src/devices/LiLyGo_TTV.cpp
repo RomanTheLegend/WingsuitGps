@@ -1,6 +1,3 @@
-#include <Arduino.h>
-#include <SPI.h>
-#include <Wire.h>
 #include <U8g2lib.h>
 #include "LiLyGo_TTV.hpp"
 #include "LiLyGo_TTV_pin_setup.h"
