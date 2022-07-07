@@ -1,3 +1,4 @@
+#include "../config.h"
 #include "../devices/GhudDevice.hpp"
 #include "../modules/ButtonInterface.hpp"
 #include "ModeManager.hpp"
@@ -59,7 +60,7 @@ void MainMenuMode::display(){
         sprintf(buffer, "  %s", menu_items[i]);
       }    
       //Serial.println(buffer);
-      GhudDevice::displayString(buffer, 20 , 10 + (i+1)*20);
+      GhudDevice::displayString(buffer, 10 + MENU_SPACING_X, 10 + (i+1)*MENU_SPACING_Y);
     }
     refreshMenuScreen=false;
   }

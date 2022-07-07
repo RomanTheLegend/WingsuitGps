@@ -10,8 +10,4 @@
 #define TOUCH_PIN           15
 #define RTC_SDA             26
 #define RTC_SCL             25
-#define ADC_PIN             34
 #define IR_RECV             13
-#define BUTTON_UP     12
-#define BUTTON_ENTER  13
-#define BUTTON_DOWN   17

@@ -1,4 +1,5 @@
-#include <U8g2lib.h>
+#ifdef TTV
+#include "../config.h"
 #include "LiLyGo_TTV.hpp"
 #include "LiLyGo_TTV_pin_setup.h"
 
@@ -105,3 +106,4 @@ void TTV::displaySide(){
 void TTV::displayTop(){
   
 }
+#endif

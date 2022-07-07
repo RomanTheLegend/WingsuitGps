@@ -1,6 +1,7 @@
-#include <Arduino.h>
+//#include <Arduino.h>
 #include <HardwareSerial.h>
 #include <EEPROM.h>
+#include "config.h"
 #include "devices/GhudDevice.hpp"
 #include "modes/ModeManager.hpp"
 #include "modules/ButtonInterface.hpp"
@@ -8,8 +9,7 @@
 #include "modules/BluetoothInterface.hpp"
 
 #define EEPROM_SIZE   1
-#define TX_PIN 27
-#define RX_PIN 26
+
 
 //https://github.com/LuckyResistor/guide-modular-firmware/blob/master/fade_demo_08/fade_demo_08.ino
 
@@ -26,13 +26,9 @@ void setup()
   ModeManager::init();
   ButtonInterface::setCallback(&processButtonInput);
 
-
   //EEPROM.begin(EEPROM_SIZE);
   //clickCounter = EEPROM.read(0);
-  
 
-  //button_init();
- 
 
   Serial.println("initialization done.");
   Serial.println("Ready");

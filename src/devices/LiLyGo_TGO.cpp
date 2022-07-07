@@ -2,16 +2,15 @@
 #include <Arduino.h>
 #include <SPI.h>
 #include <Wire.h>
-#include <TFT_eSPI.h>
+#include "../config.h"
 #include "LiLyGo_TGO.hpp"
-#include "LiLyGo_TGO_pin_setup.h"
 
 #include "../../fonts/NotoSansBold15.h"
-#include "../../fonts/Inconsolata.h"
+#include "../../fonts/NotoSansBold36.h"
 
 
 #define AA_FONT_SMALL NotoSansBold15
-#define AA_FONT_LARGE Inconsolata
+#define AA_FONT_LARGE NotoSansBold15
 
 //#define _DEBUG
 

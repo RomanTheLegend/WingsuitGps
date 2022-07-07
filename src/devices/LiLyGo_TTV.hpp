@@ -1,3 +1,4 @@
+#ifdef TTV
 #include "DisplayDevice.hpp"
 
 
@@ -11,3 +12,4 @@ class TTV : public DisplayDevice
     void displayTop() override;
     void clearScreen() override;
 };
+#endif
