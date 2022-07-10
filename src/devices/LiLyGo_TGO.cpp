@@ -6,11 +6,11 @@
 #include "LiLyGo_TGO.hpp"
 
 #include "../../fonts/NotoSansBold15.h"
-#include "../../fonts/NotoSansBold36.h"
+#include "../../fonts/Inconsolata_130_numbers_only.h"
 
 
 #define AA_FONT_SMALL NotoSansBold15
-#define AA_FONT_LARGE NotoSansBold15
+#define AA_FONT_LARGE IncoNums
 
 //#define _DEBUG
 
@@ -28,7 +28,7 @@
   
     tft.fillScreen(TFT_GREEN);
 
-    Serial.println("T-GO initialization done.");
+    Serial.println("T-GO initiated");
   }
 
 

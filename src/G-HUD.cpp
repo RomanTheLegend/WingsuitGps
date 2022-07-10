@@ -23,15 +23,15 @@ void setup()
   GpsInterface::init( TX_PIN , RX_PIN );
   BluetoothInterface::init();
   ButtonInterface::init();
-  ModeManager::init();
   ButtonInterface::setCallback(&processButtonInput);
+  ModeManager::init();
+
 
   //EEPROM.begin(EEPROM_SIZE);
   //clickCounter = EEPROM.read(0);
 
 
-  Serial.println("initialization done.");
-  Serial.println("Ready");
+  Serial.println("G-HUD initialization done");
   ModeManager::displayMode((Mode)0);
 }
 
@@ -50,7 +50,7 @@ void processButtonInput(){
   ButtonEvent event = ButtonInterface::getLastEvent();
   if (event != NONE){
       switch (event){
-        case ButtonEvent::UP:
+        case UP:
         case DOWN:
         case ENTER:
           ModeManager::processInput(event);

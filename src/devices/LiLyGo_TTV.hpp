@@ -1,4 +1,4 @@
-#ifdef TTV
+#ifdef USE_TTV
 #include "DisplayDevice.hpp"
 
 
