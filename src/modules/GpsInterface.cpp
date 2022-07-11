@@ -24,7 +24,7 @@ namespace GpsInterface {
   
 
     SerialGPS.begin ( 9600 , SERIAL_8N1, tx , rx );
-
+    Serial.println("GPS interface initiated");
 
   }
 

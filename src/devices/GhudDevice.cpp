@@ -4,11 +4,8 @@
 
 namespace GhudDevice {
 
-    #ifdef USE_TGO
-        DisplayDevice* const ghudDevice = new TGO();
-    #else
-        DisplayDevice* const ghudDevice = new TTV();
-    #endif
+    DisplayDevice* const ghudDevice = new TGO();
+
 
     void init(){
         ghudDevice -> init();

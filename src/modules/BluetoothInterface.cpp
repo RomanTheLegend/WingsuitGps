@@ -7,7 +7,7 @@ namespace BluetoothInterface {
 void init(){
   Serial.begin(115200);
   SerialBT.begin("G-HUD"); //Bluetooth device name
-
+  Serial.println("Bluetooth interface initiated");
 }
 
 void sendData(String dataString){

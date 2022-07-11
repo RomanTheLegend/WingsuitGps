@@ -11,7 +11,7 @@
     #define TX_PIN 27
     #define RX_PIN 26
     #define BUTTON_UP     35
-    #define BUTTON_DOWN   38
+    #define BUTTON_DOWN   0
     #define ADC_EN              14  //ADC_EN is the ADC detection enable port
     #define ADC_PIN             34
 #endif

@@ -1,6 +1,5 @@
-//#include <Arduino.h>
 #include <HardwareSerial.h>
-#include <EEPROM.h>
+//#include <EEPROM.h>
 #include "config.h"
 #include "devices/GhudDevice.hpp"
 #include "modes/ModeManager.hpp"
@@ -8,7 +7,7 @@
 #include "modules/GpsInterface.hpp"
 #include "modules/BluetoothInterface.hpp"
 
-#define EEPROM_SIZE   1
+//#define EEPROM_SIZE   1
 
 
 //https://github.com/LuckyResistor/guide-modular-firmware/blob/master/fade_demo_08/fade_demo_08.ino
@@ -20,13 +19,13 @@ void setup()
   Serial.begin(115200);
   Serial.println("Starting up");
   GhudDevice::init();
+  delay(100);
   GpsInterface::init( TX_PIN , RX_PIN );
   BluetoothInterface::init();
   ButtonInterface::init();
   ButtonInterface::setCallback(&processButtonInput);
   ModeManager::init();
-
-
+  
   //EEPROM.begin(EEPROM_SIZE);
   //clickCounter = EEPROM.read(0);
 
@@ -47,6 +46,7 @@ void loop()
 
 
 void processButtonInput(){
+
   ButtonEvent event = ButtonInterface::getLastEvent();
   if (event != NONE){
       switch (event){
