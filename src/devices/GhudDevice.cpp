@@ -1,11 +1,11 @@
 #include "DisplayDevice.hpp"
 #include "GhudDevice.hpp"
-#include "LiLyGo_TGO.hpp"
-//#include "LiLyGo_TTV.hpp"
+#include "../config.h"
 
 namespace GhudDevice {
 
     DisplayDevice* const ghudDevice = new TGO();
+
 
     void init(){
         ghudDevice -> init();

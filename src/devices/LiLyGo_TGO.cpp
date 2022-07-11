@@ -2,16 +2,15 @@
 #include <Arduino.h>
 #include <SPI.h>
 #include <Wire.h>
-#include <TFT_eSPI.h>
+#include "../config.h"
 #include "LiLyGo_TGO.hpp"
-#include "LiLyGo_TGO_pin_setup.h"
 
 #include "../../fonts/NotoSansBold15.h"
-#include "../../fonts/Inconsolata.h"
+#include "../../fonts/Inconsolata_130_numbers_only.h"
 
 
 #define AA_FONT_SMALL NotoSansBold15
-#define AA_FONT_LARGE Inconsolata
+#define AA_FONT_LARGE IncoNums
 
 //#define _DEBUG
 
@@ -29,7 +28,7 @@
   
     tft.fillScreen(TFT_GREEN);
 
-    Serial.println("T-GO initialization done.");
+    Serial.println("T-GO initiated");
   }
 
 

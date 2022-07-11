@@ -6,7 +6,7 @@ volatile int random_speed;
 int prev_random=0;
 
 void RandomSpeedMode::init(){
-  random_speed = 140;
+  random_speed = 240;
   GhudDevice::clearScreen();
 }
 

@@ -1,13 +1,17 @@
 #include <Button2.h>
 #include "ButtonInterface.hpp"
-#include "../devices/LiLyGo_TGO_pin_setup.h"
+#include "../config.h"
 
 
 namespace ButtonInterface {
 
     Button2 button_up(BUTTON_UP);
-    Button2 button_enter(BUTTON_ENTER);
     Button2 button_down(BUTTON_DOWN);
+
+
+    #ifdef BUTTON_ENTER
+        Button2 button_enter(BUTTON_ENTER);
+    #endif
 
     bool longpress=false;
 
@@ -17,13 +21,39 @@ namespace ButtonInterface {
 
     void init()
     {
+    
+    #ifdef BUTTON_ENTER
+        button_enter.setTapHandler([](Button2 & b) {
+            Serial.println("Enter"); 
+            if (!longpress){
+                event = ENTER;
+            } else {
+                longpress=false;
+            }
+        });
 
+        button_enter.setLongClickTime(2000);
+        button_enter.setLongClickDetectedHandler([](Button2 & b) {
+            Serial.println("Exit");
+            event = EXIT;
+            longpress=true;
+        });
+    #else
         button_up.setLongClickTime(2000);
         button_up.setLongClickDetectedHandler([](Button2 & b) {
             Serial.println("Exit");
             event = EXIT;
             longpress=true;
         });
+
+        button_down.setLongClickTime(2000);
+        button_down.setLongClickDetectedHandler([](Button2 & b) {
+            Serial.println("Enter");
+            event = ENTER;
+            longpress=true;            
+        });
+    #endif
+
         button_up.setTapHandler([](Button2 & b) {
             Serial.println("Up"); 
             if (!longpress){
@@ -33,15 +63,7 @@ namespace ButtonInterface {
             }
         });
 
-
-        button_enter.setLongClickTime(2000);
-        button_enter.setLongClickDetectedHandler([](Button2 & b) {
-            Serial.println("Enter");
-            event = ENTER;
-            longpress=true;            
-        });
-
-        button_enter.setTapHandler([](Button2 & b) {
+        button_down.setTapHandler([](Button2 & b) {
             Serial.println("Down");
             if (!longpress){
                 event = DOWN;
@@ -50,12 +72,6 @@ namespace ButtonInterface {
             }
         });
 
-        /*
-        button_down.setTapHandler([](Button2 & b) {
-            Serial.println("Down");
-            //move_cursor(2);
-        });
-        */
     }
 
 
@@ -66,8 +82,10 @@ namespace ButtonInterface {
 
     void button_loop()
     {
-        button_up.loop();
+    #ifdef BUTTON_ENTER
         button_enter.loop();
+    #endif
+        button_up.loop();
         button_down.loop();
     }
 

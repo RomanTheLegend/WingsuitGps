@@ -1,7 +1,5 @@
 #pragma once
 
-#include <Arduino.h>
-
   enum ButtonEvent {
     NONE,
     UP, 
@@ -11,8 +9,6 @@
   };
 
 namespace ButtonInterface { 
-
-
 
   typedef void (*Function)();
 

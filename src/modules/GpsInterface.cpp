@@ -20,8 +20,11 @@ namespace GpsInterface {
     // then you need some tools and a bit of patching: https://www.waveshare.com/wiki/UART_GPS_NEO-6M
     // ToDo: switch to UBX protocol which is faster tha NMEA: https://www.arduino.cc/reference/en/libraries/ubxgps/
 
-    SerialGPS.begin ( 9600 , SERIAL_8N1, tx , rx );
+    //https://cglabs.medium.com/neo-6m-howto-change-serial-data-rate-9-6k-to-115k-for-neo-6-neo-7-neo-8-66d9898c1445
+  
 
+    SerialGPS.begin ( 9600 , SERIAL_8N1, tx , rx );
+    Serial.println("GPS interface initiated");
 
   }
 

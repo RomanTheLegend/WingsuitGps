@@ -1,15 +1,14 @@
-#include <Arduino.h>
 #include <HardwareSerial.h>
-#include <EEPROM.h>
+//#include <EEPROM.h>
+#include "config.h"
 #include "devices/GhudDevice.hpp"
 #include "modes/ModeManager.hpp"
 #include "modules/ButtonInterface.hpp"
 #include "modules/GpsInterface.hpp"
 #include "modules/BluetoothInterface.hpp"
 
-#define EEPROM_SIZE   1
-#define TX_PIN 27
-#define RX_PIN 26
+//#define EEPROM_SIZE   1
+
 
 //https://github.com/LuckyResistor/guide-modular-firmware/blob/master/fade_demo_08/fade_demo_08.ino
 
@@ -20,22 +19,18 @@ void setup()
   Serial.begin(115200);
   Serial.println("Starting up");
   GhudDevice::init();
+  delay(100);
   GpsInterface::init( TX_PIN , RX_PIN );
   BluetoothInterface::init();
   ButtonInterface::init();
-  ModeManager::init();
   ButtonInterface::setCallback(&processButtonInput);
-
-
+  ModeManager::init();
+  
   //EEPROM.begin(EEPROM_SIZE);
   //clickCounter = EEPROM.read(0);
-  
 
-  //button_init();
- 
 
-  Serial.println("initialization done.");
-  Serial.println("Ready");
+  Serial.println("G-HUD initialization done");
   ModeManager::displayMode((Mode)0);
 }
 
@@ -51,10 +46,11 @@ void loop()
 
 
 void processButtonInput(){
+
   ButtonEvent event = ButtonInterface::getLastEvent();
   if (event != NONE){
       switch (event){
-        case ButtonEvent::UP:
+        case UP:
         case DOWN:
         case ENTER:
           ModeManager::processInput(event);
