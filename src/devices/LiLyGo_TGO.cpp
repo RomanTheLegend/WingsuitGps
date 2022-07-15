@@ -1,9 +1,8 @@
-
+#include "LiLyGo_TGO.hpp"
+#ifdef USE_TGO
 #include <Arduino.h>
 #include <SPI.h>
 #include <Wire.h>
-#include "../config.h"
-#include "LiLyGo_TGO.hpp"
 
 #include "../../fonts/NotoSansBold15.h"
 #include "../../fonts/Inconsolata_130_numbers_only.h"
@@ -101,3 +100,4 @@ void TGO::displayString(char* string, int x, int y){
 
   tft.drawString(string, x , y);
 }
+#endif

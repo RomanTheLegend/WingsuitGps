@@ -1,6 +1,3 @@
-
-
-
 namespace GhudDevice {
     void init();
     void displayDigits(int current, int previous);

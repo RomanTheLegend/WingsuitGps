@@ -1,6 +1,5 @@
-#ifdef USE_TTV
-#include "../config.h"
 #include "LiLyGo_TTV.hpp"
+#ifdef USE_TTV
 #include "LiLyGo_TTV_pin_setup.h"
 
 //#define _DEBUG
