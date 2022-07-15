@@ -13,6 +13,11 @@ HardwareSerial SerialGPS ( 1 );
 
 namespace GpsInterface { 
 
+
+  void sendPacket(byte *packet, byte len);
+  void changeBaudrate();
+  void changeFrequency();
+
   void init(int tx, int rx){
 
     // Default baud rate is 9600 which is 2 sentences per second (1 sentence = 4800 bytes)
@@ -24,7 +29,24 @@ namespace GpsInterface {
   
 
     SerialGPS.begin ( 9600 , SERIAL_8N1, tx , rx );
-    Serial.println("GPS interface initiated");
+    
+    changeFrequency();
+    delay(200);
+
+    SerialGPS.flush();
+
+    changeBaudrate();
+    
+    delay(200);
+
+    SerialGPS.flush();
+   /*
+    SerialGPS.end();
+    delay(300);
+    */
+    SerialGPS.begin ( 34800 , SERIAL_8N1, tx , rx );
+   
+    Serial.println("GPS interface initialized");
 
   }
 
@@ -57,7 +79,7 @@ namespace GpsInterface {
         BluetoothInterface::sendData(c);
         //Serial.write(c); // uncomment this line if you want to see the GPS data flowing
         if (gps.encode(c)) // Did a new valid sentence come in?
-          newData = true;        
+          newData = true;
       }
     }
 
@@ -97,5 +119,36 @@ namespace GpsInterface {
   {
       return &gps;
   }
+
+// Send a packet to the receiver to change baudrate to 38 400
+void changeBaudrate() {
+    byte packet38400[] = {
+      0xB5, 0x62, 0x06, 0x00, 0x14, 0x00, 0x01, 0x00, 0x00, 
+      0x00, 0xD0, 0x08, 0x00, 0x00, 0xF0, 0x87, 0x00, 0x00, 
+      0x07, 0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x74, 0x24,
+    };
+
+    byte packet115200[] = {
+      0xB5, 0x62, 0x06, 0x00, 0x14, 0x00, 0x01, 0x00, 0x00, 
+      0x00, 0xD0, 0x08, 0x00, 0x00, 0x00, 0xC2, 0x01, 0x00, 
+      0x07, 0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0xC0, 0x7E,
+    };
+    byte *packet = packet38400;
+    sendPacket(packet, sizeof(packet));
+}
+
+void changeFrequency() {
+    byte packet[] = {
+      0xB5,0x62,0x06,0x08,0x06,0x00,0xC8,0x00,0x01,0x00,0x01,0x00,0xDE,0x6A,
+    };
+    sendPacket(packet, sizeof(packet));
+}
+
+void sendPacket(byte *packet, byte len) {
+    for (byte i = 0; i < len; i++)
+    {
+        SerialGPS.write(packet[i]);
+    }
+}
 
 }

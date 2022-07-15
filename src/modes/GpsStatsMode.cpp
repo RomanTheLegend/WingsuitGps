@@ -3,17 +3,38 @@
 #include "../modules/GpsInterface.hpp"
 #include "ModeManager.hpp"
 #include "GpsStatsMode.hpp"
+#include "esp_adc_cal.h"
+#include "../config.h"
 
 bool statsNeedRefresh=true;
 int prevSatelitesFound;
 float fLatPrev, fLonPrev;
 
+int vref = 1100;
+float VBAT= 0; // battery voltage from ESP32 ADC read
 
 String floatToString(float val, float invalid, int prec);
 String getDate();
 
+void displayGpsStats();
+void displayBatteryStats();
+void float2Char(float val,char* bytes_array);
+
 void GpsStatsMode::init(){
   prevSatelitesFound=-1;  
+
+
+  esp_adc_cal_characteristics_t adc_chars;
+  esp_adc_cal_value_t val_type = esp_adc_cal_characterize(ADC_UNIT_1, ADC_ATTEN_DB_11, ADC_WIDTH_BIT_12, 1100, &adc_chars);    //Check type of calibration value used to characterize ADC
+  if (val_type == ESP_ADC_CAL_VAL_EFUSE_VREF) {
+      Serial.printf("eFuse Vref:%u mV", adc_chars.vref);
+      vref = adc_chars.vref;
+  } else if (val_type == ESP_ADC_CAL_VAL_EFUSE_TP) {
+      Serial.printf("Two Point --> coeff_a:%umV coeff_b:%umV\n", adc_chars.coeff_a, adc_chars.coeff_b);
+  } else {
+      Serial.println("Default Vref: 1100mV");
+  }
+
 }
 
 
@@ -22,6 +43,11 @@ void GpsStatsMode::processInput(ButtonEvent event){
 }
 
 void GpsStatsMode::display(){  
+  displayGpsStats();
+  displayBatteryStats();
+}
+
+void displayGpsStats(){
 
   float fLat, fLon;
   unsigned long age;
@@ -64,12 +90,25 @@ void GpsStatsMode::display(){
     //delay(250);
 }
 
+void displayBatteryStats(){
+  int y=50;
+  char buffer[25];
+  char voltage[4];
+
+  VBAT = (float)(analogRead(ADC_PIN)) * 3600 / 4095 * 2 / 1000;
+  dtostrf(VBAT,4,2,voltage);
+  sprintf(buffer, "Vbat = %s Volts", voltage );
+
+  GhudDevice::displayString(buffer, 20 , y);     
+}
+
+
 String floatToString(float val, float invalid, int prec)
 {
   char floatString[11];
   if (val == invalid)
   {
-    sprintf(floatString, "<invalid data>");
+    sprintf(floatString, "n/a");
   }
   else
   {
@@ -77,6 +116,7 @@ String floatToString(float val, float invalid, int prec)
   }
   return floatString;
 }
+
 
 String getDate(){
   int year;
@@ -91,5 +131,5 @@ String getDate(){
     sprintf(dateString, "%02d/%02d/%02d %02d:%02d:%02d ",
         month, day, year, hour, minute, second);
   }
-return dateString;
+  return dateString;
 }
