@@ -1,3 +1,5 @@
+#pragma once
+#include "../config.h"
 #ifdef USE_TTV
 #include "DisplayDevice.hpp"
 

@@ -1,5 +1,6 @@
 #pragma once
-
+#include "../config.h"
+#ifdef USE_TGO
 #include "DisplayDevice.hpp"
 
 
@@ -13,3 +14,4 @@ class TGO : public DisplayDevice
     void displayTop() override;
     void clearScreen() override;
 };
+#endif

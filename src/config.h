@@ -1,7 +1,7 @@
 
 //Uncomment device to be used
-#define USE_TGO
-//#define USE_TTV
+//#define USE_TGO
+#define USE_TTV
 
 #ifdef USE_TGO
     #include <TFT_eSPI.h>
@@ -19,8 +19,8 @@
 #ifdef USE_TTV
     #include <U8g2lib.h>
     #include "devices/LiLyGo_TTV.hpp"
-    #define MENU_SPACING_X  10
-    #define MENU_SPACING_Y  20
+    #define MENU_SPACING_X  5
+    #define MENU_SPACING_Y  11
     #define TX_PIN          21
     #define RX_PIN          22
     #define BUTTON_UP     12

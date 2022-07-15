@@ -71,7 +71,7 @@ namespace ButtonInterface {
                 longpress=false;
             }
         });
-
+        Serial.println("Buttons interface initialized");
     }
 
 
