@@ -40,12 +40,11 @@ namespace GpsInterface {
     delay(200);
 
     SerialGPS.flush();
-   /*
+
     SerialGPS.end();
-    delay(300);
-    */
-    SerialGPS.begin ( 34800 , SERIAL_8N1, tx , rx );
-   
+    
+    SerialGPS.begin ( 115200 , SERIAL_8N1, tx , rx );
+
     Serial.println("GPS interface initialized");
 
   }
@@ -133,8 +132,8 @@ void changeBaudrate() {
       0x00, 0xD0, 0x08, 0x00, 0x00, 0x00, 0xC2, 0x01, 0x00, 
       0x07, 0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0xC0, 0x7E,
     };
-    byte *packet = packet38400;
-    sendPacket(packet, sizeof(packet));
+    //byte *packet = packet115200;
+    sendPacket(packet115200, sizeof(packet115200));
 }
 
 void changeFrequency() {
