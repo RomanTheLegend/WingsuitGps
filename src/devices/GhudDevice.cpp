@@ -4,7 +4,7 @@
 
 namespace GhudDevice {
 
-    DisplayDevice* const ghudDevice = new TGO();
+    DisplayDevice* const ghudDevice = new CompositeDisplay();
 
 
     void init(){
