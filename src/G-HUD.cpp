@@ -21,7 +21,7 @@ void setup()
   GhudDevice::init();
   delay(100);
   GpsInterface::init( TX_PIN , RX_PIN );
-  BluetoothInterface::init();
+  //BluetoothInterface::init();
   ButtonInterface::init();
   ButtonInterface::setCallback(&processButtonInput);
   ModeManager::init();
