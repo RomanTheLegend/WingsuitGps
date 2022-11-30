@@ -5,13 +5,14 @@
 #include "MainMenuMode.hpp"
 
 
-#define MENU_POSITIONS 4
+#define MENU_POSITIONS 5
 
 char* menu_items[] = {
-  "Horizontal speed",
+  "Horizontal",
   "Random speed",
   "Heading",
-  "GPS stats"
+  "GPS stats",
+  "Rectangles"
 };
 
 byte cursor_position=1;
@@ -49,9 +50,10 @@ void MainMenuMode::processInput(ButtonEvent event){
 
 
 void MainMenuMode::display(){
+  GhudDevice::waitForFrame();
   if (refreshMenuScreen){
     GhudDevice::clearScreen();
-    GhudDevice::displayString("Select mode:", 10 , 10);
+    GhudDevice::displayString("Select mode:", 22 , 10);
     for (int i=0; i< MENU_POSITIONS; i++){
       char buffer[25];
       if (i+1==cursor_position){
@@ -60,9 +62,9 @@ void MainMenuMode::display(){
         sprintf(buffer, "  %s", menu_items[i]);
       }    
       //Serial.println(buffer);
-      GhudDevice::displayString(buffer, 10 + MENU_SPACING_X, 10 + (i+1)*MENU_SPACING_Y);
+      GhudDevice::displayString(buffer, 20 + MENU_SPACING_X, 10 + (i+1)*MENU_SPACING_Y);
     }
-    refreshMenuScreen=false;
+    refreshMenuScreen=false;    
   }
   //delay(250);
 }

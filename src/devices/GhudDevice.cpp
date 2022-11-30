@@ -31,4 +31,16 @@ namespace GhudDevice {
     void clearScreen(){
         ghudDevice -> clearScreen();
     }
+
+    void waitForFrame(){
+        ghudDevice -> waitForFrame();
+    }
+
+    void setRotation(int r){
+        ghudDevice -> setRotation(r);
+    }
+
+    void drawRect(int x,int y, int h, int w, int  c ){
+        ghudDevice -> drawRect(x,y,h,w,c);
+    }
 }

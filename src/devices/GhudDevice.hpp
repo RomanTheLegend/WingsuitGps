@@ -8,4 +8,7 @@ namespace GhudDevice {
     void displaySide();
     void displayTop();
     void clearScreen();
+    void waitForFrame();
+    void setRotation(int r);
+    void drawRect(int x,int y, int h, int w, int  c );
 };

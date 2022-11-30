@@ -16,16 +16,5 @@
     #define ADC_PIN             34
 #endif
 
-#ifdef USE_TTV
-    #include <U8g2lib.h>
-    #include "devices/LiLyGo_TTV.hpp"
-    #define MENU_SPACING_X  10
-    #define MENU_SPACING_Y  20
-    #define TX_PIN          21
-    #define RX_PIN          22
-    #define BUTTON_UP     12
-    #define BUTTON_ENTER  13
-    #define BUTTON_DOWN   17
-    #define ADC_PIN             34
-#endif
+
 

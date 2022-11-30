@@ -11,4 +11,7 @@ public:
   virtual void displaySide() = 0;
   virtual void displayTop() = 0;
   virtual void clearScreen() = 0;
+  virtual void waitForFrame() = 0;
+  virtual void setRotation(int r) = 0;
+  virtual void drawRect(int x,int y, int h, int w, int  c ) = 0;
 };

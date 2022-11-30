@@ -12,4 +12,7 @@ class CompositeDisplay : public DisplayDevice
     void displaySide() override;
     void displayTop() override;
     void clearScreen() override;
+    void waitForFrame() override;
+    void setRotation(int r) override;
+    void drawRect(int x,int y, int h, int w, int  c ) override;
 };

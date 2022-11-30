@@ -10,7 +10,7 @@
 #define AA_FONT_SMALL NotoSansBold15
 #define AA_FONT_LARGE IncoNums
 */
-//#define _DEBUG
+#define _DEBUG
 
 ESP_8_BIT_GFX videoOut(true /* = NTSC */, 8 /* = RGB332 color */);
 
@@ -20,7 +20,7 @@ void CompositeDisplay::init()
   videoOut.begin();
   videoOut.setRotation(3);
   videoOut.setTextSize(2);
-  //videoOut.copyAfterSwap = true;
+  videoOut.copyAfterSwap = true;
   Serial.println("Composite Video initiated");
 }
 
@@ -69,7 +69,6 @@ void CompositeDisplay::displayDigits(int current, int previous){
     if (previous !=0){
       videoOut.setTextColor(TFT_BLACK, TFT_BLACK);
       videoOut.setCursor(5, 15);
-      videoOut.waitForFrame();
       videoOut.print(String(previous));
     } else {
       videoOut.fillScreen(0);
@@ -77,29 +76,35 @@ void CompositeDisplay::displayDigits(int current, int previous){
     videoOut.setTextColor(TFT_GREEN, TFT_BLACK);
 
     videoOut.setCursor(5, 15);
-    videoOut.waitForFrame();
     videoOut.print(String(current));
   }
 
 }
 
 void CompositeDisplay::clearScreen(){
-  videoOut.waitForFrame();
-
   videoOut.fillScreen(TFT_BLACK);
-  videoOut.waitForFrame();
-    Serial.println("clear");
 }
 
 void CompositeDisplay::displayString(char* string, int x, int y){  
 
-  videoOut.waitForFrame();
+  //videoOut.waitForFrame();
 
   videoOut.setCursor(x, y + 20);
   videoOut.setTextWrap(false);
   videoOut.setTextColor(TFT_BLUE);
   Serial.println(string);
   videoOut.print(string);
-  videoOut.waitForFrame();
   
+}
+
+void CompositeDisplay::drawRect(int x,int y, int h, int w, int  c){
+  videoOut.drawRect(x,y,h,w,c);
+}
+
+void CompositeDisplay::setRotation(int r){
+  videoOut.setRotation(r);
+}
+
+void CompositeDisplay::waitForFrame(){
+  videoOut.waitForFrame();
 }

@@ -4,6 +4,7 @@
 #include "HorizontalSpeedMode.hpp"
 #include "HeadingMode.hpp"
 #include "GpsStatsMode.hpp"
+#include "RectanglesMode.hpp"
 
 
 namespace ModeManager{
@@ -15,7 +16,8 @@ DisplayMode* const gMode[] = {
   //new TotalSpeed(AnimationModeRoll::Right),
   new RandomSpeedMode(),
   new HeadingMode(),
-  new GpsStatsMode()
+  new GpsStatsMode(),
+  new RectanglesMode()
 };
 
 //const uint8_t cModeCount = 3;

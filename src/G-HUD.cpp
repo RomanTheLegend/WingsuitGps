@@ -20,7 +20,7 @@ void setup()
   Serial.println("Starting up");
   GhudDevice::init();
   delay(100);
-  GpsInterface::init( TX_PIN , RX_PIN );
+//  GpsInterface::init( TX_PIN , RX_PIN );
   //BluetoothInterface::init();
   ButtonInterface::init();
   ButtonInterface::setCallback(&processButtonInput);
@@ -40,7 +40,7 @@ void setup()
 void loop()
 { 
   ModeManager::progress();
-  GpsInterface::loop();
+//  GpsInterface::loop();
   processButtonInput();
 }
 
