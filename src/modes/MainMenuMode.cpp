@@ -6,12 +6,16 @@
 
 
 #define MENU_POSITIONS 5
+#define MAX_ITEMS_DISPLAYED 4
 
 char* menu_items[] = {
   "Horizontal",
   "Random speed",
   "Heading",
   "GPS stats",
+  "Fake mode 1",
+  "Fake mode 2",
+  "Fake mode 3",
   "Rectangles"
 };
 
@@ -21,6 +25,7 @@ bool refreshMenuScreen=true;
 void MainMenuMode::init(){
     refreshMenuScreen = true;
 }
+
 
 
 void MainMenuMode::processInput(ButtonEvent event){
@@ -54,7 +59,20 @@ void MainMenuMode::display(){
   if (refreshMenuScreen){
     GhudDevice::clearScreen();
     GhudDevice::displayString("Select mode:", 22 , 10);
-    for (int i=0; i< MENU_POSITIONS; i++){
+    int start,end;
+    if ( cursor_position < MAX_ITEMS_DISPLAYED){
+      start = 0; 
+      end = MAX_ITEMS_DISPLAYED;
+    }
+
+    if ( cursor_position >= MAX_ITEMS_DISPLAYED){
+      start = cursor_position - MAX_ITEMS_DISPLAYED;
+      end = cursor_position;
+    }
+
+    
+    // int end = 3;
+    for (int i=start; i< end; i++){
       char buffer[25];
       if (i+1==cursor_position){
         sprintf(buffer, "* %s", menu_items[i]);
