@@ -20,6 +20,10 @@ namespace GhudDevice {
         ghudDevice -> displayString(string,  x,  y);
     }
 
+    void displayString(char* string, int color, int x, int y){
+        ghudDevice -> displayString(string, color, x,  y);
+    }
+
     void displaySide(){
         ghudDevice -> displaySide();
     }
@@ -42,5 +46,9 @@ namespace GhudDevice {
 
     void drawRect(int x,int y, int h, int w, int  c ){
         ghudDevice -> drawRect(x,y,h,w,c);
+    }
+
+    void drawLine(int x,int y, int x1, int y1, int  c ){
+        ghudDevice -> drawLine(x,y,x1,y1,c);
     }
 }

@@ -89,4 +89,8 @@ namespace GpsInterface {
   long getHeading(){
     return long(gps.heading / 100000.0 + 0.5);
   }
+
+  long getHeight(){
+    return long(gps.height / 1000.0 + 0.5);
+  }
 }

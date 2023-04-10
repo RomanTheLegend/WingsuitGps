@@ -2,21 +2,21 @@
 #include <ESP_8_BIT_GFX.h>
 #include "../config.h"
 #include "CompositeDisplay.hpp"
-/*
-#include "../../fonts/NotoSansBold15.h"
-#include "../../fonts/Inconsolata_130_numbers_only.h"
 
 
-#define AA_FONT_SMALL NotoSansBold15
-#define AA_FONT_LARGE IncoNums
-*/
-
+//https://rop.nl/truetype2gfx/
 #include "../../fonts/Inconsolata_Bold30pt7b.h"
+#include "../../fonts/NotoSans_Bold10pt7b.h"
+
 
 #define _DEBUG
 
 ESP_8_BIT_GFX videoOut(true /* = NTSC */, 8 /* = RGB332 color */);
 
+// Color picker:
+// https://roger-random.github.io/RGB332_color_wheel_three.js/
+
+int GLOBAL_COLOR = TFT_MAROON;
 
 void CompositeDisplay::init()
 {
@@ -68,7 +68,8 @@ void CompositeDisplay::displaySide() {
 
 
 void CompositeDisplay::displayDigits(int current, int previous){
-int c_x=30; int c_y=120;
+int c_x=30; int c_y=130;
+  videoOut.setFont(&Inconsolata_Bold30pt7b);
 
   if((previous != current)){
     if (previous !=0){
@@ -78,10 +79,9 @@ int c_x=30; int c_y=120;
     } else {
       videoOut.fillScreen(0);
     }
-    videoOut.setTextColor(TFT_GREEN, TFT_BLACK);
+    videoOut.setTextColor(0x54, TFT_BLACK);
     videoOut.setTextWrap(false);
     // videoOut.setTextSize(10);
-    videoOut.setFont(&Inconsolata_Bold30pt7b);
     // videoOut.setTextColor(TFT_BLUE);
     videoOut.setCursor(c_x, c_y);
     // Serial.println(current);
@@ -94,14 +94,28 @@ void CompositeDisplay::clearScreen(){
   videoOut.fillScreen(TFT_BLACK);
 }
 
+void CompositeDisplay::displayString(char* string, int color, int x, int y){  
+
+  GLOBAL_COLOR = color;
+  //videoOut.waitForFrame();
+  videoOut.setFont(&NotoSans_Bold10pt7b);
+  videoOut.setCursor(x, y + 20);
+  videoOut.setTextWrap(false);
+  videoOut.setTextColor(GLOBAL_COLOR);
+  // Serial.println(string);
+  videoOut.print(string);
+  
+}
+
+
 void CompositeDisplay::displayString(char* string, int x, int y){  
 
   //videoOut.waitForFrame();
-  videoOut.setFont();
+  videoOut.setFont(&NotoSans_Bold10pt7b);
   videoOut.setCursor(x, y + 20);
   videoOut.setTextWrap(false);
   videoOut.setTextColor(TFT_BLUE);
-  Serial.println(string);
+  // Serial.println(string);
   videoOut.print(string);
   
 }
@@ -109,6 +123,11 @@ void CompositeDisplay::displayString(char* string, int x, int y){
 void CompositeDisplay::drawRect(int x,int y, int h, int w, int  c){
   videoOut.drawRect(x,y,h,w,c);
 }
+
+void CompositeDisplay::drawLine(int x,int y, int x1, int y1, int  c ){
+  videoOut.drawLine(x,y,x1,y1,c);
+}
+
 
 void CompositeDisplay::setRotation(int r){
   videoOut.setRotation(r);

@@ -31,7 +31,7 @@ void setup()
 
 
   Serial.println("G-HUD initialization done");
-  ModeManager::displayMode((Mode)0);
+  ModeManager::displayMode((Mode)1);
 }
 
 

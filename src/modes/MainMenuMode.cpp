@@ -9,13 +9,13 @@
 #define MAX_ITEMS_DISPLAYED 4
 
 char* menu_items[] = {
+  "Competition"
   "Horizontal",
   "Random speed",
   "Heading",
   "GPS stats",
-  "Fake mode 1",
-  "Fake mode 2",
-  "Fake mode 3",
+  // "Fake mode 2",
+  // "Fake mode 3",
   "Rectangles"
 };
 

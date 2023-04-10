@@ -14,5 +14,6 @@ namespace GpsInterface {
 
   long getSpeed();
   long getHeading();
+  long getHeight();
 
 }

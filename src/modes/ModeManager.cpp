@@ -4,6 +4,7 @@
 #include "HorizontalSpeedMode.hpp"
 #include "HeadingMode.hpp"
 #include "GpsStatsMode.hpp"
+#include "CompetitionMode.hpp"
 #include "RectanglesMode.hpp"
 
 
@@ -11,6 +12,7 @@ namespace ModeManager{
 
 DisplayMode* const gMode[] = {
   new MainMenuMode(),
+  new CompetitionMode(),
   new HorizontalSpeedMode(),
   //new VerticalSpeed(AnimationModeRoll::Left),
   //new TotalSpeed(AnimationModeRoll::Right),
