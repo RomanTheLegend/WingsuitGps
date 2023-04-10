@@ -17,7 +17,6 @@ void HeadingMode::processInput(ButtonEvent event){
 
 
 void HeadingMode::display(){
-  // float fHeading = 0;// GpsInterface::getGps()->f_course();
   long heading = GpsInterface::getHeading(); 
 
   GhudDevice::displayDigits(heading, previousHeading);

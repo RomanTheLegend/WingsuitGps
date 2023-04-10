@@ -34,6 +34,8 @@ void RectanglesMode::display(){
     delta = 200-delta;
   }
   
+  
+  GhudDevice::waitForFrame();
   GhudDevice::clearScreen();
 
   for(uint8_t r = 0; r < 4; r++)
