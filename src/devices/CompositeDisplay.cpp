@@ -10,6 +10,9 @@
 #define AA_FONT_SMALL NotoSansBold15
 #define AA_FONT_LARGE IncoNums
 */
+
+#include "../../fonts/Inconsolata_Bold30pt7b.h"
+
 #define _DEBUG
 
 ESP_8_BIT_GFX videoOut(true /* = NTSC */, 8 /* = RGB332 color */);
@@ -64,21 +67,23 @@ void CompositeDisplay::displaySide() {
 
 
 
-
 void CompositeDisplay::displayDigits(int current, int previous){
+int c_x=30; int c_y=120;
+
   if((previous != current)){
     if (previous !=0){
       videoOut.setTextColor(TFT_BLACK, TFT_BLACK);
-      videoOut.setCursor(5, 15);
+      videoOut.setCursor(c_x, c_y);
       videoOut.print(String(previous));
     } else {
       videoOut.fillScreen(0);
     }
     videoOut.setTextColor(TFT_GREEN, TFT_BLACK);
     videoOut.setTextWrap(false);
-    videoOut.setTextSize(10);
+    // videoOut.setTextSize(10);
+    videoOut.setFont(&Inconsolata_Bold30pt7b);
     // videoOut.setTextColor(TFT_BLUE);
-    videoOut.setCursor(22, 50);
+    videoOut.setCursor(c_x, c_y);
     // Serial.println(current);
     videoOut.print(current);
   }
@@ -92,7 +97,7 @@ void CompositeDisplay::clearScreen(){
 void CompositeDisplay::displayString(char* string, int x, int y){  
 
   //videoOut.waitForFrame();
-
+  videoOut.setFont();
   videoOut.setCursor(x, y + 20);
   videoOut.setTextWrap(false);
   videoOut.setTextColor(TFT_BLUE);
