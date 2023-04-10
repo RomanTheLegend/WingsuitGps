@@ -30,7 +30,8 @@ void RandomSpeedMode::display(){
         random_speed = random_speed - randNumber;
       }
     }
-    
+  
+  GhudDevice::waitForFrame();
   GhudDevice::displayDigits(random_speed, prev_random);
   prev_random=random_speed;
 }

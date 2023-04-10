@@ -3,7 +3,7 @@
 #include "../modules/GpsInterface.hpp"
 #include "HeadingMode.hpp"
 
-int previousHeading; 
+long previousHeading; 
 
 void HeadingMode::init(){
   GhudDevice::clearScreen();  
@@ -17,8 +17,8 @@ void HeadingMode::processInput(ButtonEvent event){
 
 
 void HeadingMode::display(){
-  float fHeading = GpsInterface::getGps()->f_course();
-  int heading = int(fHeading);  
+  // float fHeading = 0;// GpsInterface::getGps()->f_course();
+  long heading = GpsInterface::getHeading(); 
 
   GhudDevice::displayDigits(heading, previousHeading);
   previousHeading=heading;

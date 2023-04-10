@@ -64,6 +64,7 @@ void CompositeDisplay::displaySide() {
 
 
 
+
 void CompositeDisplay::displayDigits(int current, int previous){
   if((previous != current)){
     if (previous !=0){
@@ -74,9 +75,12 @@ void CompositeDisplay::displayDigits(int current, int previous){
       videoOut.fillScreen(0);
     }
     videoOut.setTextColor(TFT_GREEN, TFT_BLACK);
-
-    videoOut.setCursor(5, 15);
-    videoOut.print(String(current));
+    videoOut.setTextWrap(false);
+    videoOut.setTextSize(10);
+    // videoOut.setTextColor(TFT_BLUE);
+    videoOut.setCursor(22, 50);
+    // Serial.println(current);
+    videoOut.print(current);
   }
 
 }

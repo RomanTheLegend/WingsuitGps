@@ -17,9 +17,10 @@ void HorizontalSpeedMode::processInput(ButtonEvent event){
 
 
 void HorizontalSpeedMode::display(){
-  float fSpeed = GpsInterface::getGps()->f_speed_kmph();
-  int hSpeed = int(fSpeed);  
+  // auto gps = GpsInterface::getGps<HardwareSerial>();
+  long hSpeed = GpsInterface::getSpeed();
 
+  GhudDevice::waitForFrame();
   GhudDevice::displayDigits(hSpeed, hSpeedPrevious);
   hSpeedPrevious=hSpeed;  
 }
