@@ -16,5 +16,9 @@
     #define ADC_PIN             34
 #endif
 
+// static enum fgHudFonts = [
+//     SYSTEM,
+
+// ] 
 
 

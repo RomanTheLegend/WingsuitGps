@@ -17,5 +17,7 @@ class CompositeDisplay : public DisplayDevice
     void setRotation(int r) override;
     void drawRect(int x,int y, int h, int w, int  c ) override;
     void drawLine(int x,int y, int x1, int y1, int  c ) override;
-
+    void drawArrow(int center_x, int center_y, int angle) override;
+    void setFont(int id);
+    void setColor(int id);
 };

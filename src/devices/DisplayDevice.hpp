@@ -16,5 +16,5 @@ public:
   virtual void setRotation(int r) = 0;
   virtual void drawRect(int x,int y, int h, int w, int  c ) = 0;
   virtual void drawLine(int x,int y, int x1, int y1, int  c ) = 0;
-
+  virtual void drawArrow(int center_x, int center_y, int angle) = 0;
 };

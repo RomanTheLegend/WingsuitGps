@@ -3,6 +3,8 @@
 #include <Arduino.h>
 #include <UbxGpsNavPvt.h>
 #include <UbxGpsConfig.h>
+#include "../common.h"
+
 
 namespace GpsInterface { 
 
@@ -15,5 +17,11 @@ namespace GpsInterface {
   long getSpeed();
   long getHeading();
   long getHeight();
+  long getFallSpeed();
+  long getAcceleration();
+  bool isFalling();
+  DataPoint getStartDp();
+  DataPoint getCurDp();
+  long getExitTs();
 
 }

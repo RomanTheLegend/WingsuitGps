@@ -13,4 +13,6 @@ namespace GhudDevice {
     void setRotation(int r);
     void drawRect(int x,int y, int h, int w, int  c );
     void drawLine(int x,int y, int x1, int y1, int  c );
+    void drawArrow(int center_x, int center_y, int angle);
+
 };

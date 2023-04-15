@@ -17,7 +17,8 @@ ESP_8_BIT_GFX videoOut(true /* = NTSC */, 8 /* = RGB332 color */);
 // Color picker:
 // https://roger-random.github.io/RGB332_color_wheel_three.js/
 
-int GLOBAL_COLOR = TFT_MAROON;
+int DEFAULT_COLOR = TFT_MAROON;
+int GLOBAL_COLOR = DEFAULT_COLOR;
 
 void CompositeDisplay::init()
 {
@@ -29,7 +30,19 @@ void CompositeDisplay::init()
 }
 
 
+  void CompositeDisplay::setFont(int id){
+    switch (id){
+      case 1: videoOut.setFont(); break;
+      case 2: videoOut.setFont(&Inconsolata_Bold30pt7b);break;
+      case 3: videoOut.setFont(&NotoSans_Bold10pt7b);break;
+    }
 
+  }
+
+  void CompositeDisplay::setColor(int id){
+    videoOut.setTextColor(id);
+    GLOBAL_COLOR = id;
+  }
 
   void CompositeDisplay::displayTop() {
 
@@ -70,7 +83,6 @@ void CompositeDisplay::displaySide() {
 
 void CompositeDisplay::displayDigits(int current, int previous){
 int c_x=30; int c_y=130;
-  videoOut.setFont(&Inconsolata_Bold30pt7b);
 
   if((previous != current)){
     if (previous !=0){
@@ -99,7 +111,6 @@ void CompositeDisplay::displayString(char* string, int color, int x, int y){
 
   GLOBAL_COLOR = color;
   //videoOut.waitForFrame();
-  videoOut.setFont(&NotoSans_Bold10pt7b);
   videoOut.setCursor(x, y + 20);
   videoOut.setTextWrap(false);
   videoOut.setTextColor(GLOBAL_COLOR);
@@ -112,7 +123,7 @@ void CompositeDisplay::displayString(char* string, int color, int x, int y){
 void CompositeDisplay::displayString(char* string, int x, int y){  
 
   //videoOut.waitForFrame();
-  videoOut.setFont(&NotoSans_Bold10pt7b);
+  // videoOut.setFont(&NotoSans_Bold10pt7b);
   videoOut.setCursor(x, y + 20);
   videoOut.setTextWrap(false);
   videoOut.setTextColor(TFT_BLUE);
@@ -127,6 +138,36 @@ void CompositeDisplay::drawRect(int x,int y, int h, int w, int  c){
 
 void CompositeDisplay::drawLine(int x,int y, int x1, int y1, int  c ){
   videoOut.drawLine(x,y,x1,y1,c);
+}
+
+void CompositeDisplay::drawArrow(int cX, int cY, int angle ){
+  int c = GLOBAL_COLOR;
+  int x1, x2, x3, x4 ,x5, x6 ,x7;
+  int y1, y2, y3, y4, y5, y6, y7;
+  x1 = cX - 2;
+  x2 = cX - 2;
+  x3 = cX - 4;
+  x4 = cX ;
+  x5 = cX + 4;
+  x6 = cX + 2;
+  x7 = cX + 2;
+
+  y1 = cY + 5;
+  y2 = cY - 2;
+  y3 = cY - 2;
+  y4 = cY - 7;
+  y5 = cY - 2;
+  y6 = cY - 2;
+  y7 - cY + 5;
+
+  videoOut.drawLine(x1,y1,x2,y2,c);
+  videoOut.drawLine(x2,y2,x3,y3,c);
+  videoOut.drawLine(x3,y3,x4,y4,c);
+  videoOut.drawLine(x4,y4,x5,y5,c);
+  videoOut.drawLine(x5,y5,x6,y6,c);
+  videoOut.drawLine(x6,y6,x7,y7,c);
+  videoOut.drawLine(x7,y7,x1,y1,c);
+
 }
 
 

@@ -51,4 +51,9 @@ namespace GhudDevice {
     void drawLine(int x,int y, int x1, int y1, int  c ){
         ghudDevice -> drawLine(x,y,x1,y1,c);
     }
+
+    void drawArrow(int center_x, int center_y, int angle){
+        ghudDevice -> drawArrow (center_x, center_y, angle);
+    }
+
 }
