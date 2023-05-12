@@ -1,11 +1,15 @@
+#pragma once
 #include "../devices/GhudDevice.hpp"
 #include "../modules/ButtonInterface.hpp"
 #include "../modules/GpsInterface.hpp"
-#include "ModeManager.hpp"
-#include "GpsStatsMode.hpp"
+// #include "ModeManager.hpp"
 #include "esp_adc_cal.h"
 #include "../config.h"
+#include "DisplayMode.hpp"
 
+class GpsStatsMode : public DisplayMode
+{
+private:
 bool statsNeedRefresh=true;
 int prevSatelitesFound;
 float fLatPrev, fLonPrev;
@@ -13,39 +17,6 @@ float fLatPrev, fLonPrev;
 int vref = 1100;
 float VBAT= 0; // battery voltage from ESP32 ADC read
 
-String floatToString(float val, float invalid, int prec);
-String getDate();
-
-void displayGpsStats();
-void displayBatteryStats();
-void float2Char(float val,char* bytes_array);
-
-void GpsStatsMode::init(){
-  prevSatelitesFound=-1;  
-
-
-  esp_adc_cal_characteristics_t adc_chars;
-  esp_adc_cal_value_t val_type = esp_adc_cal_characterize(ADC_UNIT_1, ADC_ATTEN_DB_11, ADC_WIDTH_BIT_12, 1100, &adc_chars);    //Check type of calibration value used to characterize ADC
-  if (val_type == ESP_ADC_CAL_VAL_EFUSE_VREF) {
-      Serial.printf("eFuse Vref:%u mV", adc_chars.vref);
-      vref = adc_chars.vref;
-  } else if (val_type == ESP_ADC_CAL_VAL_EFUSE_TP) {
-      Serial.printf("Two Point --> coeff_a:%umV coeff_b:%umV\n", adc_chars.coeff_a, adc_chars.coeff_b);
-  } else {
-      Serial.println("Default Vref: 1100mV");
-  }
-
-}
-
-
-void GpsStatsMode::processInput(ButtonEvent event){
-
-}
-
-void GpsStatsMode::display(){  
-  displayGpsStats();
-  displayBatteryStats();
-}
 
 void displayGpsStats(){
 
@@ -133,3 +104,34 @@ String floatToString(float val, float invalid, int prec)
 //   }
 //   return dateString;
 // }
+
+public:
+void init(){
+  prevSatelitesFound=-1;  
+
+
+  esp_adc_cal_characteristics_t adc_chars;
+  esp_adc_cal_value_t val_type = esp_adc_cal_characterize(ADC_UNIT_1, ADC_ATTEN_DB_11, ADC_WIDTH_BIT_12, 1100, &adc_chars);    //Check type of calibration value used to characterize ADC
+  if (val_type == ESP_ADC_CAL_VAL_EFUSE_VREF) {
+      Serial.printf("eFuse Vref:%u mV", adc_chars.vref);
+      vref = adc_chars.vref;
+  } else if (val_type == ESP_ADC_CAL_VAL_EFUSE_TP) {
+      Serial.printf("Two Point --> coeff_a:%umV coeff_b:%umV\n", adc_chars.coeff_a, adc_chars.coeff_b);
+  } else {
+      Serial.println("Default Vref: 1100mV");
+  }
+
+}
+
+
+void processInput(ButtonEvent event){
+
+}
+
+void display(){  
+  displayGpsStats();
+  displayBatteryStats();
+}
+
+
+};

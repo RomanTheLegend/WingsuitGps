@@ -1,12 +1,16 @@
 #include "../devices/GhudDevice.hpp"
 #include "../modules/ButtonInterface.hpp"
-#include "RectanglesMode.hpp"
+#include "DisplayMode.hpp"
 
+class RectanglesMode : public DisplayMode
+{
+private:
 long fractionSecond;
 uint8_t currentState;
 uint8_t delta;
 
-void RectanglesMode::init(){
+public:
+void init(){
   currentState = 0;
   fractionSecond = millis()%1000;
   delta = 0;
@@ -14,12 +18,12 @@ void RectanglesMode::init(){
 
 
 
-void RectanglesMode::processInput(ButtonEvent event){
+void processInput(ButtonEvent event){
   
 }
 
 
-void RectanglesMode::display(){
+void display(){
   if (millis()%1000 < fractionSecond)
   {
     // Cycle through one of four states every second
@@ -61,3 +65,4 @@ void RectanglesMode::display(){
     }
   }
 }
+};

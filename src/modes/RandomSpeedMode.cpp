@@ -1,23 +1,29 @@
 #include "../devices/GhudDevice.hpp"
 #include "../modules/ButtonInterface.hpp"
-#include "RandomSpeedMode.hpp"
+#include "DisplayMode.hpp"
 
+class RandomSpeedMode : public DisplayMode
+{
+
+private:
 volatile int random_speed;
 int prev_random=0;
 
-void RandomSpeedMode::init(){
+public: 
+
+void init(){
   random_speed = 240;
   GhudDevice::clearScreen();
 }
 
 
 
-void RandomSpeedMode::processInput(ButtonEvent event){
+void processInput(ButtonEvent event){
   
 }
 
 
-void RandomSpeedMode::display(){
+void display(){
 
     int randNumber = random(3);
     if (random_speed < randNumber){
@@ -35,3 +41,4 @@ void RandomSpeedMode::display(){
   GhudDevice::displayDigits(random_speed, prev_random);
   prev_random=random_speed;
 }
+};

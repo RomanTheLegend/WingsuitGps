@@ -145,7 +145,19 @@ namespace GpsInterface
     return exitTs;
   }
 
-  DataPoint getCurDp(){
+  DataPoint getCurDp(){ 
     return curDp;
   }
+
+  long getFallSpeed()
+  {
+    return long(gps.velD * 0.0036);
+  }
+
+
+  long getAcceleration()
+  {
+    return long(gps.vAcc * 0.0036);
+  }
+
 }

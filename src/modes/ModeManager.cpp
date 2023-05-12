@@ -1,11 +1,11 @@
 #include "ModeManager.hpp"
-#include "MainMenuMode.hpp"
-#include "RandomSpeedMode.hpp"
-#include "HorizontalSpeedMode.hpp"
-#include "HeadingMode.hpp"
-#include "GpsStatsMode.hpp"
-#include "CompetitionMode.hpp"
-#include "RectanglesMode.hpp"
+#include "MainMenuMode.cpp"
+#include "RandomSpeedMode.cpp"
+#include "HorizontalSpeedMode.cpp"
+#include "HeadingMode.cpp"
+#include "GpsStatsMode.cpp"
+#include "CompetitionMode.cpp"
+#include "RectanglesMode.cpp"
 
 
 namespace ModeManager{
@@ -50,4 +50,4 @@ void processInput(ButtonEvent event){
   void progress(){
     gMode[static_cast<uint8_t>(gCurrentMode)]->display();
   }
-}
+};

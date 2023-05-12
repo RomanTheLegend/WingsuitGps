@@ -1,3 +1,5 @@
+
+
 #include "../config.h"
 #include "../devices/GhudDevice.hpp"
 #include "../modules/ButtonInterface.hpp"
@@ -7,7 +9,15 @@
 #define MENU_POSITIONS 6
 #define MAX_ITEMS_DISPLAYED 4
 
-char* menu_items[] = {
+
+
+
+class MainMenuMode : public DisplayMode
+{
+
+private:
+
+char* menu_items[MENU_POSITIONS] = {
   "Competition", 
   "Horizontal",
   "Random speed",
@@ -15,11 +25,6 @@ char* menu_items[] = {
   "GPS stats",
   "Rectangles"
 };
-
-class MainMenuMode : public DisplayMode
-{
-
-private:
 
 byte cursor_position=1;
 bool refreshMenuScreen=true;
@@ -32,28 +37,6 @@ public:
 void init(){
   refreshMenuScreen = true;
 }
-
-
-
-
-        // case DOWN:
-        //     if (cursor_position < MENU_POSITIONS - 1) {
-        //         cursor_position++;
-        //     }
-        //     if (cursor_position > bottom_item) {
-        //         top_item++;
-        //         bottom_item++;
-        //     }
-        // case UP:
-        //     if (cursor_position > 0) {
-        //         cursor_position--;
-        //     }
-        //     if (cursor_position < top_item) {
-        //         top_item--;
-        //         bottom_item--;
-        //     }
-        
-
 
 void processInput(ButtonEvent event){
   switch (event) {
@@ -102,11 +85,11 @@ void display(){
       end_index++;
     }
 
-      Serial.println();
-      Serial.print("\t\tcursor_position "); Serial.println(cursor_position);
-      Serial.print("\t\tstart_index "); Serial.println(start_index);
-      Serial.print("\t\tend_index "); Serial.println(end_index);
-      Serial.println();
+      // Serial.println();
+      // Serial.print("\t\tcursor_position "); Serial.println(cursor_position);
+      // Serial.print("\t\tstart_index "); Serial.println(start_index);
+      // Serial.print("\t\tend_index "); Serial.println(end_index);
+      // Serial.println();
     
     // int end = 3;
     for (int i=start_index; i< end_index; i++){
@@ -116,7 +99,7 @@ void display(){
       }  else {
         sprintf(buffer, "  %s", menu_items[i]);
       }    
-      Serial.println(buffer);
+      // Serial.println(buffer);
       // GhudDevice::displayString(buffer, 20 + MENU_SPACING_X, 10 + (i+1)*MENU_SPACING_Y);
       GhudDevice::displayString(buffer, 20 + MENU_SPACING_X, 10 + (i-start_index+1)*MENU_SPACING_Y);
 

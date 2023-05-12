@@ -5,7 +5,7 @@
 
 #ifdef USE_TGO
     #include <TFT_eSPI.h>
-    #include "devices/CompositeDisplay.hpp"
+    #include "devices/CompositeDisplay.cpp"
     #define MENU_SPACING_X  10
     #define MENU_SPACING_Y  20
     #define TX_PIN 27
