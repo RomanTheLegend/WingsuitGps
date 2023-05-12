@@ -2,6 +2,7 @@
 #include <ESP_8_BIT_GFX.h>
 #include "../config.h"
 #include "DisplayDevice.hpp"
+#include <math.h>
 
 //https://rop.nl/truetype2gfx/
 //https://tchapi.github.io/Adafruit-GFX-Font-Customiser/
@@ -149,31 +150,56 @@ void drawLine(int x,int y, int x1, int y1, int  c ){
 
 void drawArrow(int cX, int cY, int angle ){
   int c = GLOBAL_COLOR;
+  int m = 3;
   int x1, x2, x3, x4 ,x5, x6 ,x7;
   int y1, y2, y3, y4, y5, y6, y7;
-  x1 = cX - 2;
-  x2 = cX - 2;
-  x3 = cX - 4;
-  x4 = cX ;
-  x5 = cX + 4;
-  x6 = cX + 2;
-  x7 = cX + 2;
 
-  y1 = cY + 5;
-  y2 = cY - 2;
-  y3 = cY - 2;
-  y4 = cY - 7;
-  y5 = cY - 2;
-  y6 = cY - 2;
-  y7 - cY + 5;
+  double radians = angle * M_PI / 180.0;
+  double sin_angle = sin(radians);
+  double cos_angle = cos(radians);
 
-  videoOut->drawLine(x1,y1,x2,y2,c);
-  videoOut->drawLine(x2,y2,x3,y3,c);
-  videoOut->drawLine(x3,y3,x4,y4,c);
-  videoOut->drawLine(x4,y4,x5,y5,c);
-  videoOut->drawLine(x5,y5,x6,y6,c);
-  videoOut->drawLine(x6,y6,x7,y7,c);
-  videoOut->drawLine(x7,y7,x1,y1,c);
+
+  x1 = - 2*m;
+  x2 = - 2*m;
+  x3 = - 4*m;
+  x4 =   0 ;
+  x5 = + 4*m;
+  x6 = + 2*m;
+  x7 = + 2*m;
+
+  y1 = + 5*m;
+  y2 = - 2*m;
+  y3 = - 2*m;
+  y4 = - 7*m;
+  y5 = - 2*m;
+  y6 = - 2*m;
+  y7 = + 5*m;
+
+
+  double new_x1 = x1 * cos_angle - y1 * sin_angle + cX;
+  double new_y1 = x1 * sin_angle + y1 * cos_angle + cY;
+  double new_x2 = x2 * cos_angle - y2 * sin_angle + cX;
+  double new_y2 = x2 * sin_angle + y2 * cos_angle + cY;
+  double new_x3 = x3 * cos_angle - y3 * sin_angle + cX;
+  double new_y3 = x3 * sin_angle + y3 * cos_angle + cY;
+  double new_x4 = x4 * cos_angle - y4 * sin_angle + cX;
+  double new_y4 = x4 * sin_angle + y4 * cos_angle + cY;
+  double new_x5 = x5 * cos_angle - y5 * sin_angle + cX;
+  double new_y5 = x5 * sin_angle + y5 * cos_angle + cY;
+  double new_x6 = x6 * cos_angle - y6 * sin_angle + cX;
+  double new_y6 = x6 * sin_angle + y6 * cos_angle + cY;
+  double new_x7 = x7 * cos_angle - y7 * sin_angle + cX;
+  double new_y7 = x7 * sin_angle + y7 * cos_angle + cY;
+
+
+
+  videoOut->drawLine(new_x1,new_y1,new_x2,new_y2,c);
+  videoOut->drawLine(new_x2,new_y2,new_x3,new_y3,c);
+  videoOut->drawLine(new_x3,new_y3,new_x4,new_y4,c);
+  videoOut->drawLine(new_x4,new_y4,new_x5,new_y5,c);
+  videoOut->drawLine(new_x5,new_y5,new_x6,new_y6,c);
+  videoOut->drawLine(new_x6,new_y6,new_x7,new_y7,c);
+  videoOut->drawLine(new_x7,new_y7,new_x1,new_y1,c);
 
 }
 
