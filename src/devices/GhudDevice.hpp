@@ -10,6 +10,7 @@ namespace GhudDevice {
     void displayTop();
     void clearScreen();
     void waitForFrame();
+    void setFontId(int r);
     void setRotation(int r);
     void drawRect(int x,int y, int h, int w, int  c );
     void drawLine(int x,int y, int x1, int y1, int  c );

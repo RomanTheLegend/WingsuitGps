@@ -44,6 +44,10 @@ namespace GhudDevice {
         ghudDevice -> setRotation(r);
     }
 
+    void setFontId(int r){
+        ghudDevice -> setFontId(r);
+    }
+
     void drawRect(int x,int y, int h, int w, int  c ){
         ghudDevice -> drawRect(x,y,h,w,c);
     }
