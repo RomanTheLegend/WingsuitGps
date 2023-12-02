@@ -1,25 +1,28 @@
+#pragma once
 #include "../devices/GhudDevice.hpp"
 #include "../modules/ButtonInterface.hpp"
 #include "../modules/GpsInterface.hpp"
-#include "HeadingMode.hpp"
+#include "DisplayMode.hpp"
 
-int previousHeading; 
+class HeadingMode : public DisplayMode
+{
+long previousHeading; 
 
-void HeadingMode::init(){
+void init(){
   GhudDevice::clearScreen();  
   previousHeading = -1;
 }
 
 
-void HeadingMode::processInput(ButtonEvent event){
+void processInput(ButtonEvent event){
   
 }
 
 
-void HeadingMode::display(){
-  float fHeading = GpsInterface::getGps()->f_course();
-  int heading = int(fHeading);  
+void display(){
+  long heading = GpsInterface::getHeading(); 
 
   GhudDevice::displayDigits(heading, previousHeading);
   previousHeading=heading;
 }
+};

@@ -1,43 +1,51 @@
-# Project Orion
+# Project FlyScope
 
-![Helmet assembly with display on](images/helmet_assembed.jpg "Helmet assembly with display on")
+A GPS-based HUD with programmable output designed to aid in wingsuit flying and competitions.
 
-A GPS-based HUD with programmable output designed to aid in wingsuit flying. At present it displays horisontal speed (km/h) but can be programmed to display more. Possibilities (in future code releases):
+### Device generations
+1-st: Based on transparent OLED display and NMEA. No longer in development, code remains in https://github.com/RomanTheLegend/WingsuitGps/tree/legacy_device
 
-Basic:
-* Vertical speed
-* Total speed
-* Altitude (AMSL)
-* Glide ratio
+2-nd: Based on TFT display and NMEA. No longer in development
+
+3-rt: Based on ocular TFT display and UBX protocol. Currently developed:
+
+![Ocular display with main unit](images/gen3_prototype.jpg "Ocular display with main unit")
+
+
+
+
+## Current project stage: raw prototypes & lots of untested code. Lots of work ahead and your contributions are warmly welcome
+
+
+
+
+### Currently developed modes
+* Competition
+  - Displays speed & altitude
+  - Detects the exit
+  - Helps stay in the designated lane
+  - Closely follows FlySight algorythms for results calculation
+* Horizontal speed
+* Random speed
+  - Used for testing UI rendering
 * Heading
-* Direction to target
-* Distance
 
-Advanced:
-* Deviation from designited fligh window
-* Canopy mode
-* you name it...
+
+
 
 
 ## Parts required
-* LilyGo TTV ( https://www.aliexpress.com/item/1005001681414979.html )
-* UART-based GPS receiver (for ex. GPS GY-NEO6MV2 NEO-6M)
+* ESP32 board with buttons
+* Monocular display (https://www.aliexpress.com/item/1005001406805469.html)
+* UART-based GPS receiver (for ex. GPS GY-NEO7MV2 NEO-7M) - beware! NEO-6M does not support UBX protocol
 * Micro-USB LiIon charger (for ex. TP4056)
 * Li-Ion battery rated at least 3.7v (GPS receiver requires 3.3v-5v )
 * L-shaped USB-C cable extension (optional)
 * On/Off slide switch
 
-## Assembly
-
-* Disassemble TTV unit (https://www.youtube.com/watch?v=039iSQ2LBbM)
-* Remove battery (unsolder)
-* Remove IR unit (unsolder)
-* Remove P6 port (unsolder)
-* Solder GPS RX/TX as shown below:
-![Helmet wiring diagram](images/wiring_001.png "Helmet wiring diagram")
-* 3D print basic models for enclosure (board goes USB-C port pointing downwards, with flex cable gently stretched)
-
-![3D drawing of display frame](images/display_mainboard_frame.png "3D drawing of display frame")
-
 ## How To
 * [Install ESP32 board support in Arduino ](https://microcontrollerslab.com/install-esp32-arduino-ide/)
+
+
+## 1-st generation device
+![Helmet assembly with display on](images/helmet_assembed.jpg "Helmet assembly with display on")

@@ -1,21 +1,25 @@
 #include "ModeManager.hpp"
-#include "MainMenuMode.hpp"
-#include "RandomSpeedMode.hpp"
-#include "HorizontalSpeedMode.hpp"
-#include "HeadingMode.hpp"
-#include "GpsStatsMode.hpp"
+#include "MainMenuMode.cpp"
+#include "RandomSpeedMode.cpp"
+#include "HorizontalSpeedMode.cpp"
+#include "HeadingMode.cpp"
+#include "GpsStatsMode.cpp"
+#include "CompetitionMode.cpp"
+#include "RectanglesMode.cpp"
 
 
 namespace ModeManager{
 
 DisplayMode* const gMode[] = {
   new MainMenuMode(),
+  new CompetitionMode(),
   new HorizontalSpeedMode(),
   //new VerticalSpeed(AnimationModeRoll::Left),
   //new TotalSpeed(AnimationModeRoll::Right),
   new RandomSpeedMode(),
   new HeadingMode(),
-  new GpsStatsMode()
+  new GpsStatsMode(),
+  new RectanglesMode()
 };
 
 //const uint8_t cModeCount = 3;
@@ -46,4 +50,4 @@ void processInput(ButtonEvent event){
   void progress(){
     gMode[static_cast<uint8_t>(gCurrentMode)]->display();
   }
-}
+};
