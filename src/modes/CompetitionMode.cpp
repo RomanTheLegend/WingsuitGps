@@ -21,9 +21,14 @@ public:
   void display()
   {
 
-    // getRandomSpeed();
+    getRandomSpeed();
     long height = GpsInterface::getHeight();
 
+    int angle = millis()/100 % 360;
+    if (angle != prev_angle){
+      GhudDevice::clearScreen();
+      prev_angle = angle;
+    }
     GhudDevice::waitForFrame();
     GhudDevice::displayString("Alt", 0x53, 30, 0);
     GhudDevice::displayString("3619", 0x77, 120, 0);
@@ -37,12 +42,12 @@ public:
 
     // GhudDevice::drawArrow(100, 140, 90);
 
-    if (GpsInterface::isFalling)
+    if (GpsInterface::detectFreefall())
     {
       checkLane();
     } else {
-      GhudDevice::displayString("Not in freefall", 0x77, 100, 140);
-      GhudDevice::drawArrow(100, 140, 0);
+      GhudDevice::displayString("Not in freefall", 0x77, 30, 180);
+      GhudDevice::drawArrow(120, 175, angle);
 
     }
 
@@ -55,32 +60,33 @@ private:
 
   int comp_mode_random_speed = 240;
   int comp_mode_prev_random = 0;
+  int prev_angle = 0;
 
-  // void getRandomSpeed()
-  // {
-  //   int randNumber = random(3);
-  //   if (comp_mode_random_speed < randNumber)
-  //   {
-  //     comp_mode_random_speed = comp_mode_random_speed + randNumber;
-  //   }
-  //   else
-  //   {
-  //     int direction = random(4);
-  //     if (direction > 1)
-  //     {
-  //       comp_mode_random_speed = comp_mode_random_speed + randNumber;
-  //     }
-  //     else
-  //     {
-  //       comp_mode_random_speed = comp_mode_random_speed - randNumber;
-  //     }
-  //   }
-  // }
+  void getRandomSpeed()
+  {
+    int randNumber = random(3);
+    if (comp_mode_random_speed < randNumber)
+    {
+      comp_mode_random_speed = comp_mode_random_speed + randNumber;
+    }
+    else
+    {
+      int direction = random(4);
+      if (direction > 1)
+      {
+        comp_mode_random_speed = comp_mode_random_speed + randNumber;
+      }
+      else
+      {
+        comp_mode_random_speed = comp_mode_random_speed - randNumber;
+      }
+    }
+  }
 
   void checkLane()
   {
     DataPoint curDp = GpsInterface::getCurDp();
-    if (GpsInterface::getStartDp().isValid){
+    if (GpsInterface::getExitTs() == 0){
       GhudDevice::displayString(" Ololo ", 0x77, 100, 140);
 
     }
@@ -93,29 +99,3 @@ private:
 
   }
 };
-// void isFreefall(){
-
-//             const DataPoint dp1 = prevDp;
-//             const DataPoint dp2 = new DataPoint(GpsInterface::getFallSpeed(), GpsInterface::getAcceleration());
-
-//             // Get interpolation coefficient
-//             const double velD = A_GRAVITY;
-//             const double a = (velD - dp1.velD) / (dp2.velD - dp1.velD);
-
-//             // Check vertical speed
-//             if (a >= 0 || 1 >= a) return;
-
-//             // Check accuracy
-//             const double vAcc = dp1.vAcc + a * (dp2.vAcc - dp1.vAcc);
-//             if (vAcc <= 10) return;
-
-//             // Check acceleration
-//             const double az = dp1.az + a * (dp2.az - dp1.az);
-//             if (az < A_GRAVITY / 5.) continue;
-
-//             // Determine exit
-//             const qint64 t1 = dp1.dateTime.toMSecsSinceEpoch();
-//             const qint64 t2 = dp2.dateTime.toMSecsSinceEpoch();
-//             start = t1 + a * (t2 - t1) - velD / az * 1000.;
-//             foundExit = true;
-// }

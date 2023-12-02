@@ -19,7 +19,7 @@ namespace GpsInterface {
   long getHeight();
   long getFallSpeed();
   long getAcceleration();
-  bool isFalling();
+  bool detectFreefall();
   DataPoint getStartDp();
   DataPoint getCurDp();
   long getExitTs();

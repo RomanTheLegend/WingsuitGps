@@ -1,3 +1,5 @@
+#include "DataPoint.h"
+
 #define PI          3.14159265359
 
 #define A_GRAVITY   9.80665     // Standard acceleration due to gravity (m/s^2)
@@ -8,17 +10,17 @@
 #define GAS_CONST   8.31447     // Universal gas constant (J/mol/K)
 
 
-#ifndef DATAPOINT
-#define DATAPOINT
+// #ifndef DATAPOINT
+// #define DATAPOINT
 
-  struct DataPoint
-  {
-    long velD;
-    long vAcc;
-    long az;
-    long ts;
-    long lat;
-    long lon;
-    bool isValid;
-  };
-#endif
+//   struct DataPoint
+//   {
+//     long velD;
+//     long vAcc;
+//     long az;
+//     long ts;
+//     long lat;
+//     long lon;
+//     bool isValid;
+//   };
+// #endif

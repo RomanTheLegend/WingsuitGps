@@ -11,8 +11,9 @@
 namespace GpsInterface
 {
 
-  HardwareSerial SerialGPS(2);
+#define SLOPE_LEN 4
 
+  HardwareSerial SerialGPS(2);
   UbxGpsNavPvt<HardwareSerial> gps(SerialGPS);
 
 #define GPS_BAUDRATE 115200
@@ -21,14 +22,42 @@ namespace GpsInterface
 #define DATETIME_LENGTH 20
   char datetime[DATETIME_LENGTH];
 
-
+  DataPoint timeseries[SLOPE_LEN];
 
   DataPoint curDp;
-  DataPoint prevDp;
-  DataPoint runStartDp;
-  long exitTs;
+  long long exitTs = 0;
+  long long firstSignalTs = 0;
 
   bool alreadyFalling = false;
+
+  void addElement(DataPoint value, DataPoint array[], int size)
+  {
+    for (int i = 0; i < size - 1; ++i)
+    {
+      array[i] = array[i + 1];
+    }
+    array[size - 1] = value;
+  }
+
+  double getSlope()
+  {
+    double sumx = 0, sumy = 0, sumxx = 0, sumxy = 0;
+
+    for (int i = 0; i <= SLOPE_LEN - 1; ++i)
+    {
+      double y = timeseries[i].velD;
+      double t = timeseries[i].t;
+
+      sumx += t;
+      sumy += y;
+      sumxx += t * t;
+      sumxy += t * y;
+    }
+
+    int n = SLOPE_LEN;
+    double slope = (sumxy - sumx * sumy / n) / (sumxx - sumx * sumx / n);
+    return slope;
+  }
 
   void init(int tx, int rx)
   {
@@ -70,17 +99,31 @@ namespace GpsInterface
       Serial.print(" , Sats: ");
       Serial.println(gps.numSV);
 #endif
-      prevDp = curDp;
       curDp.vAcc = getAcceleration();
       curDp.velD = getFallSpeed();
       curDp.ts = gps.iTOW;
 
-      if (!runStartDp.isValid && (gps.iTOW -  exitTs > 10000)) {
-        runStartDp.lat = gps.lat;
-        runStartDp.lon = gps.lon;
-        runStartDp.ts = gps.iTOW;
-        runStartDp.isValid = true;
+      if (firstSignalTs != 0)
+      {
+        curDp.t = (double)(curDp.ts - firstSignalTs) / 1000;
+        addElement(curDp, timeseries, SLOPE_LEN);
       }
+      else
+      {
+        firstSignalTs = gps.iTOW;
+      }
+
+      if (!alreadyFalling){
+        detectFreefall();
+      }
+
+      // if (!runStartDp.isValid && (gps.iTOW - exitTs > 10000))
+      // {
+      //   runStartDp.lat = gps.lat;
+      //   runStartDp.lon = gps.lon;
+      //   runStartDp.ts = gps.iTOW;
+      //   runStartDp.isValid = true;
+      // }
     }
     // while (SerialGPS.available())
     // {
@@ -113,39 +156,49 @@ namespace GpsInterface
     return long(gps.height / 1000.0 + 0.5);
   }
 
-  bool isFreefall()
+  bool detectFreefall()
   {
     if (alreadyFalling)
       return true;
 
-    // Get interpolation coefficient
-    double a = (A_GRAVITY - prevDp.velD) / (curDp.velD - prevDp.velD);
+    // Get acceleration using linear least squares
+    timeseries[SLOPE_LEN - 1].az = getSlope();
+    double g = A_GRAVITY;
 
+    int p = SLOPE_LEN - 2, c = SLOPE_LEN - 1;
+
+    double a = (g - timeseries[p].velD) / (timeseries[c].velD - timeseries[p].velD);
     // Check vertical speed
-    if (a < 0 || 1 < a) return false;
+    if (a < 0 || 1 < a)
+      return false;
 
     // Check accuracy
-    double vAcc = prevDp.vAcc + a * (curDp.vAcc - prevDp.vAcc);
-    if (vAcc > 10) return false;
+    double vAcc = timeseries[p].vAcc + a * (timeseries[c].vAcc - timeseries[p].vAcc);
+    if (vAcc > 10)
+      return false;
 
     // Check acceleration
-    double az = prevDp.az + a * (curDp.az - prevDp.az);
-    if (az < A_GRAVITY / 5.) return false;
+    double az = timeseries[p].az + a * (timeseries[c].az - timeseries[p].az);
+    if (az < g / 5.)
+      return false;
 
-    exitTs= prevDp.ts + a * (curDp.ts - prevDp.ts) - A_GRAVITY / az * 1000.;
+    exitTs = (long long)(timeseries[p].ts + a * (timeseries[c].ts - timeseries[p].ts) - g / az * 1000.);
     alreadyFalling = true;
-    return true;
+    return alreadyFalling;
   }
 
-  DataPoint getStartDp(){
-    return runStartDp;
-  }
+  // DataPoint getStartDp()
+  // {
+  //   return runStartDp;
+  // }
 
-  long getExitTs(){
+  long getExitTs()
+  {
     return exitTs;
   }
 
-  DataPoint getCurDp(){ 
+  DataPoint getCurDp()
+  {
     return curDp;
   }
 
@@ -153,7 +206,6 @@ namespace GpsInterface
   {
     return long(gps.velD * 0.0036);
   }
-
 
   long getAcceleration()
   {
