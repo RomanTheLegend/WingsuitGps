@@ -1,61 +1,13 @@
 #include "../devices/GhudDevice.hpp"
 #include "../modules/ButtonInterface.hpp"
-#include "../modules/GpsInterface.hpp"
+#include "../modules/DataProvider.cpp"
 #include "DisplayMode.hpp"
 
 class CompetitionMode : public DisplayMode
 {
 
-public:
-
-  void init()
-  {
-    comp_mode_random_speed = 240;
-    GhudDevice::clearScreen();
-  }
-
-  void processInput(ButtonEvent event)
-  {
-  }
-
-  void display()
-  {
-
-    getRandomSpeed();
-    long height = GpsInterface::getHeight();
-
-    int angle = millis()/100 % 360;
-    if (angle != prev_angle){
-      GhudDevice::clearScreen();
-      prev_angle = angle;
-    }
-    GhudDevice::waitForFrame();
-    GhudDevice::displayString("Alt", 0x53, 30, 0);
-    GhudDevice::displayString("3619", 0x77, 120, 0);
-    GhudDevice::drawLine(11, 40, 233, 40, 0x6C);
-
-    // GhudDevice::setFontId(2);
-    GhudDevice::displayDigits(comp_mode_random_speed, comp_mode_prev_random);
-
-    // GhudDevice::drawRect(11, 150, 223, 65, 0x6C);
-    GhudDevice::drawLine(11, 150, 233, 150, 0x6C);
-
-    // GhudDevice::drawArrow(100, 140, 90);
-
-    if (GpsInterface::detectFreefall())
-    {
-      checkLane();
-    } else {
-      GhudDevice::displayString("Not in freefall", 0x77, 30, 180);
-      GhudDevice::drawArrow(120, 175, angle);
-
-    }
-
-    comp_mode_prev_random = comp_mode_random_speed;
-  }
-
 private:
-
+  // DataProvider dataProvider;
   DataPoint targetDp;
 
   int comp_mode_random_speed = 240;
@@ -85,17 +37,67 @@ private:
 
   void checkLane()
   {
-    DataPoint curDp = GpsInterface::getCurDp();
-    if (GpsInterface::getExitTs() == 0){
+    DataPoint curDp = DataProvider::getInstance().getDataPoint();
+    if (DataProvider::getInstance().getExitTs() == 0){
       GhudDevice::displayString(" Ololo ", 0x77, 100, 140);
 
     }
     else{
-      int secondsSinceExit = int ( (curDp.ts -  GpsInterface::getExitTs()) / 1000 );
+      int secondsSinceExit = int ( (curDp.ts -  DataProvider::getInstance().getExitTs()) / 1000 );
       GhudDevice::displayString("Lane lock in ", 0x77, 30, 180);
       GhudDevice::displayString("9", 0x77, 190, 180); // 10 - secondsSinceExit
       GhudDevice::drawArrow(130, 175, 0);
     }
 
+  }
+
+  public:
+
+  void init()
+  {
+    comp_mode_random_speed = 240;
+    // dataProvider = DataProvider::getInstance();
+    GhudDevice::clearScreen();
+  }
+
+  void processInput(ButtonEvent event)
+  {
+  }
+
+  void display()
+  {
+
+    getRandomSpeed();
+
+    DataPoint dp = DataProvider::getInstance().getDataPoint();
+
+    int angle = millis()/100 % 360;
+    if (angle != prev_angle){
+      GhudDevice::clearScreen();
+      prev_angle = angle;
+    }
+    GhudDevice::waitForFrame();
+    GhudDevice::displayString("Alt", 0x53, 30, 0);
+    GhudDevice::displayString("3619", 0x77, 120, 0);
+    GhudDevice::drawLine(11, 40, 233, 40, 0x6C);
+
+    // GhudDevice::setFontId(2);
+    GhudDevice::displayDigits(comp_mode_random_speed, comp_mode_prev_random);
+
+    // GhudDevice::drawRect(11, 150, 223, 65, 0x6C);
+    GhudDevice::drawLine(11, 150, 233, 150, 0x6C);
+
+    // GhudDevice::drawArrow(100, 140, 90);
+
+    if (DataProvider::getInstance().getExitTs() != 0)
+    {
+      checkLane();
+    } else {
+      GhudDevice::displayString("Not in freefall", 0x77, 30, 180);
+      GhudDevice::drawArrow(120, 175, angle);
+
+    }
+
+    comp_mode_prev_random = comp_mode_random_speed;
   }
 };

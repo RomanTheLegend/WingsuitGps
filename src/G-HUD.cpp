@@ -6,6 +6,7 @@
 #include "modules/ButtonInterface.hpp"
 #include "modules/GpsInterface.hpp"
 #include "modules/BluetoothInterface.hpp"
+#include "modules/DataProvider.cpp"
 
 //#define EEPROM_SIZE   1
 
@@ -20,7 +21,7 @@ void setup()
   Serial.println("Starting up");
   GhudDevice::init();
   delay(100);
-  GpsInterface::init( TX_PIN , RX_PIN );
+  // GpsInterface::init( TX_PIN , RX_PIN );
   //BluetoothInterface::init();
   ButtonInterface::init();
   ButtonInterface::setCallback(&processButtonInput);
@@ -40,7 +41,7 @@ void setup()
 void loop()
 { 
   ModeManager::progress();
-  GpsInterface::loop();
+  DataProvider::getInstance().refresh();
   processButtonInput();
 }
 

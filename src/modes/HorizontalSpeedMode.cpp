@@ -1,6 +1,6 @@
 #include "../devices/GhudDevice.hpp"
 #include "../modules/ButtonInterface.hpp"
-#include "../modules/GpsInterface.hpp"
+#include "../modules/DataProvider.cpp"
 #include "DisplayMode.hpp"
 
 class HorizontalSpeedMode : public DisplayMode
@@ -10,7 +10,7 @@ int hSpeedPrevious;
 
 public:
 void init(){
-  GhudDevice::clearScreen();  
+  GhudDevice::clearScreen(); 
   hSpeedPrevious = -1;
 }
 
@@ -21,8 +21,7 @@ void processInput(ButtonEvent event){
 
 
 void display(){
-  // auto gps = GpsInterface::getGps<HardwareSerial>();
-  long hSpeed = GpsInterface::getSpeed();
+  long hSpeed = long (DataProvider::getInstance().getDataPoint().horizontalSpeed);
 
   GhudDevice::waitForFrame();
   GhudDevice::displayDigits(hSpeed, hSpeedPrevious);

@@ -1,18 +1,19 @@
 #pragma once
 #include "../devices/GhudDevice.hpp"
 #include "../modules/ButtonInterface.hpp"
-#include "../modules/GpsInterface.hpp"
+#include "../modules/DataProvider.cpp"
 #include "DisplayMode.hpp"
 
 class HeadingMode : public DisplayMode
 {
-long previousHeading; 
+private:
+  long previousHeading; 
 
+public:
 void init(){
-  GhudDevice::clearScreen();  
+  GhudDevice::clearScreen();
   previousHeading = -1;
 }
-
 
 void processInput(ButtonEvent event){
   
@@ -20,7 +21,7 @@ void processInput(ButtonEvent event){
 
 
 void display(){
-  long heading = GpsInterface::getHeading(); 
+  long heading = long(DataProvider::getInstance().getDataPoint().heading); 
 
   GhudDevice::displayDigits(heading, previousHeading);
   previousHeading=heading;
