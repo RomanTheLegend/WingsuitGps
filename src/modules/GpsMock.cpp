@@ -7,134 +7,116 @@
 class GpsMock : public GpsInterface
 {
 private:
-  DataPoint curDp;
-  DataPoint _curDp;
+    DataPoint curDp;
+    DataPoint _curDp;
 
-  unsigned long long convertToUnixEpoch(const String &timestamp)
-  {
-    tmElements_t tm;
-    int year, month, day, hour, minute, second;
-
-    // Parse the timestamp string
-    sscanf(timestamp.c_str(), "%d-%d-%dT%d:%d:%d", &year, &month, &day, &hour, &minute, &second);
-
-    tm.Year = CalendarYrToTm(year);
-    tm.Month = month;
-    tm.Day = day;
-    tm.Hour = hour;
-    tm.Minute = minute;
-    tm.Second = second;
-
-    // Check if there is a fraction of seconds
-    if (timestamp.indexOf('.') != -1)
+    long long convertToUnixEpoch(const String &rawString)
     {
-      int dotIndex = timestamp.indexOf('.');
-      int ZIndex = timestamp.indexOf('Z');
+        char timeString[24];
+        rawString.toCharArray(timeString, 24);
+        TimeElements tm;
+        int year, month, day, hour, minute, second;
 
-      // Read the fraction of seconds
-      String fractionString = timestamp.substring(dotIndex + 1, ZIndex);
+        // Parse the timestamp string
+        // ex. 2023-08-24T12:59:14.400Z
 
-      // Convert fractionString to an integer if it is not empty
-      int fractionSeconds = (!fractionString.isEmpty()) ? fractionString.toInt() : 0;
+        tm.Year = CalendarYrToTm((timeString[0] - '0') * 1000 + (timeString[1] - '0') * 100 + (timeString[2] - '0') * 10 + (timeString[3] - '0'));
+        tm.Month = (timeString[5] - '0') * 10 + (timeString[6] - '0');
+        tm.Day = (timeString[8] - '0') * 10 + (timeString[9] - '0');
+        tm.Hour = (timeString[11] - '0') * 10 + (timeString[12] - '0');
+        tm.Minute = (timeString[14] - '0') * 10 + (timeString[15] - '0');
+        tm.Second = (timeString[17] - '0') * 10 + (timeString[18] - '0');
+        int milis = (timeString[20] - '0') * 100 + (timeString[21] - '0') * 10 + (timeString[22] - '0');
 
-      time_t epochTime = makeTime(tm);
-      unsigned long long milliseconds = epochTime * 1000;
-
-      // Add the fraction of seconds in milliseconds
-      return milliseconds + fractionSeconds * 10 + 3600000;
+        // Assemble time elements into time_t.
+        time_t t = makeTime(tm);
+        return long(t)*1000 + milis;
     }
-    else
-    {
-      time_t epochTime = makeTime(tm);
-      return epochTime * 1000;
-    }
-  }
 
 public:
-
-  static GpsMock& getInstance() {
-      static GpsMock instance;
-      return instance;
-  }
-
-  void refresh()
-  {
-    String line;
-
-    if (Serial.available() > 0)
+    static GpsMock &getInstance()
     {
-      line = Serial.readStringUntil('\n');
-
-      int pos = 0;
-      String token;
-      while ((pos = line.indexOf(',')) != -1)
-      {
-        token = line.substring(0, pos);
-        line.remove(0, pos + 1);
-
-        switch (_curDp.ts)
-        {
-          case 1:
-            _curDp.ts = convertToUnixEpoch(token);
-            break;
-
-          case 2:
-            _curDp.lat = token.toFloat();
-            break;
-
-          case 3:
-            _curDp.lon = token.toFloat();
-            break;
-
-          case 4:
-            _curDp.hMSL = token.toFloat();
-            break;
-
-          case 5:
-            _curDp.velN = token.toFloat();
-            break;
-
-          case 6:
-            _curDp.velE = token.toFloat();
-            break;
-
-          case 7:
-            _curDp.velD = token.toFloat();
-            break;
-
-          case 8:
-            _curDp.hAcc = token.toFloat();
-            break;
-
-          case 9:
-            _curDp.vAcc = token.toFloat();
-            break;
-
-          case 10:
-            _curDp.sAcc = token.toFloat();
-            break;
-
-          case 11:
-            _curDp.heading = token.toFloat();
-            break;
-
-          case 12:
-            _curDp.cAcc = token.toFloat();
-            break;
-
-          case 14:
-            _curDp.numSV = token.toFloat();
-            break;
-        }
-
-      }
-
-      curDp = _curDp;
+        static GpsMock instance;
+        return instance;
     }
-  }
 
-  DataPoint getLatestData()
-  {
-    return curDp;
-  }
+    void refresh()
+    {
+        String line;
+
+        if (Serial.available() > 0)
+        {
+            line = Serial.readStringUntil('\n');
+
+            int pos = 0;
+            String token;
+            while ((pos = line.indexOf(',')) != -1)
+            {
+                token = line.substring(0, pos);
+                line.remove(0, pos + 1);
+
+                switch (pos)
+                {
+                case 1:
+                    _curDp.ts = convertToUnixEpoch(token);
+                    break;
+
+                case 2:
+                    _curDp.lat = token.toFloat();
+                    break;
+
+                case 3:
+                    _curDp.lon = token.toFloat();
+                    break;
+
+                case 4:
+                    _curDp.hMSL = token.toFloat();
+                    break;
+
+                case 5:
+                    _curDp.velN = token.toFloat();
+                    break;
+
+                case 6:
+                    _curDp.velE = token.toFloat();
+                    break;
+
+                case 7:
+                    _curDp.velD = token.toFloat();
+                    break;
+
+                case 8:
+                    _curDp.hAcc = token.toFloat();
+                    break;
+
+                case 9:
+                    _curDp.vAcc = token.toFloat();
+                    break;
+
+                case 10:
+                    _curDp.sAcc = token.toFloat();
+                    break;
+
+                case 11:
+                    _curDp.heading = token.toFloat();
+                    break;
+
+                case 12:
+                    _curDp.cAcc = token.toFloat();
+                    break;
+
+                case 14:
+                    _curDp.numSV = token.toFloat();
+                    break;
+                }
+            }
+
+            curDp = _curDp;
+        }
+    }
+
+    DataPoint getLatestData()
+    {
+        return curDp;
+    }
 };
