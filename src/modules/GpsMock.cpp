@@ -1,8 +1,11 @@
 #pragma once
 #include <Arduino.h>
+#include <HardwareSerial.h>
 #include "GpsInterface.hpp"
 #include "../common.h"
 #include <TimeLib.h>
+
+// #define MOCK_DEBUG
 
 class GpsMock : public GpsInterface
 {
@@ -28,9 +31,10 @@ private:
         tm.Second = (timeString[17] - '0') * 10 + (timeString[18] - '0');
         int milis = (timeString[20] - '0') * 100 + (timeString[21] - '0') * 10 + (timeString[22] - '0');
 
-        // Assemble time elements into time_t.
-        time_t t = makeTime(tm);
-        return long(t)*1000 + milis;
+        long long t = makeTime(tm);
+        t = t * 1000 + milis;
+
+        return t;
     }
 
 public:
@@ -47,15 +51,31 @@ public:
         if (Serial.available() > 0)
         {
             line = Serial.readStringUntil('\n');
+#ifdef MOCK_DEBUG
+            Serial.println("received data:");
+            Serial.println(line);
+            String line_orig = line;
+#endif
 
             int pos = 0;
+            int field = 0;
             String token;
+
+            //ToDo: fix bug with parsing last field - i.e. when there's no last comma
             while ((pos = line.indexOf(',')) != -1)
             {
+                field++;
                 token = line.substring(0, pos);
-                line.remove(0, pos + 1);
+                // Serial.print("#");Serial.println(field);
+                // Serial.print(" pos=");Serial.println(pos);
+                // Serial.print(" token=");Serial.println(token);
+                // Serial.print(" line=");Serial.println(line);
 
-                switch (pos)
+                line.remove(0, pos + 1);
+                // Serial.print(" line2=");Serial.println(line);
+                // Serial.println(" ---");
+
+                switch (field)
                 {
                 case 1:
                     _curDp.ts = convertToUnixEpoch(token);
@@ -109,8 +129,25 @@ public:
                     _curDp.numSV = token.toFloat();
                     break;
                 }
+                
             }
 
+#ifdef MOCK_DEBUG
+            Serial.println(line_orig);
+            Serial.print("ts=");Serial.print(_curDp.ts);
+            Serial.print(" lat=");Serial.print(_curDp.lat);
+            Serial.print(" lon=");Serial.print(_curDp.lon);
+            Serial.print(" hMSL=");Serial.print(_curDp.hMSL);
+            Serial.print(" velN=");Serial.print(_curDp.velN);
+            Serial.print(" velE=");Serial.print(_curDp.velE);
+            Serial.print(" velD=");Serial.print(_curDp.velD);
+            Serial.print(" hAcc=");Serial.print(_curDp.hAcc);
+            Serial.print(" vAcc=");Serial.print(_curDp.vAcc);
+            Serial.print(" sAcc=");Serial.print(_curDp.sAcc);
+            Serial.print(" heading=");Serial.print(_curDp.heading);
+            Serial.print(" cAcc=");Serial.print(_curDp.cAcc);
+            Serial.print(" numSV=");Serial.println(_curDp.numSV);
+#endif
             curDp = _curDp;
         }
     }

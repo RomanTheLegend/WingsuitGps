@@ -32,7 +32,7 @@
 class DataPoint
 {
 public:
-    long        ts;
+    long long        ts;
 
     bool        hasGeodetic;
     bool        isValid;
