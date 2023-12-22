@@ -12,7 +12,11 @@ private:
 
   int comp_mode_random_speed = 240;
   int comp_mode_prev_random = 0;
+  int hMSL = 0;
+  int prev_hMSL = 0;
   int prev_angle = 0;
+  char alt[4];
+  char prev_alt[4];
 
   void getRandomSpeed()
   {
@@ -67,18 +71,26 @@ private:
   void display()
   {
 
-    getRandomSpeed();
+    // getRandomSpeed();
 
     DataPoint dp = DataProvider::getInstance().getDataPoint();
-
-    int angle = millis()/100 % 360;
+    comp_mode_random_speed = int (sqrt(dp.velN * dp.velN + dp.velE * dp.velE)*3.6);
+    hMSL = int(dp.hMSL);
+    // int angle = millis()/100 % 360;
+    int angle = int(dp.heading);
     if (angle != prev_angle){
       GhudDevice::clearScreen();
       prev_angle = angle;
     }
     GhudDevice::waitForFrame();
     GhudDevice::displayString("Alt", 0x53, 30, 0);
-    GhudDevice::displayString("3619", 0x77, 120, 0);
+
+    sprintf(alt, "%d", hMSL);
+    // if (prev_hMSL != hMSL){
+    //   sprintf(prev_alt, "%d", prev_hMSL );
+    //   GhudDevice::displayString(prev_alt, 0x00, 120, 0);
+    // }
+    GhudDevice::displayString(alt, 0x77, 120, 0);
     GhudDevice::drawLine(11, 40, 233, 40, 0x6C);
 
     // GhudDevice::setFontId(2);
