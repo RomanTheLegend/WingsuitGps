@@ -15,6 +15,10 @@ namespace GhudDevice {
         ghudDevice -> displayDigits( current,  previous);
     }
 
+    void displayDigits(int current){
+        ghudDevice -> displayDigits( current);
+    }
+
 
     void displayString(char* string, int x, int y){
         ghudDevice -> displayString(string,  x,  y);

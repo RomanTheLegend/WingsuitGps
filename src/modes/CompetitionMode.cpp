@@ -10,8 +10,8 @@ private:
   // DataProvider dataProvider;
   DataPoint targetDp;
 
-  int comp_mode_random_speed = 240;
-  int comp_mode_prev_random = 0;
+  int horizontal_speed = 240;
+  int horizontal_speed_prev = 0;
   int hMSL = 0;
   int prev_hMSL = 0;
   int prev_angle = 0;
@@ -21,20 +21,20 @@ private:
   void getRandomSpeed()
   {
     int randNumber = random(3);
-    if (comp_mode_random_speed < randNumber)
+    if (horizontal_speed < randNumber)
     {
-      comp_mode_random_speed = comp_mode_random_speed + randNumber;
+      horizontal_speed = horizontal_speed + randNumber;
     }
     else
     {
       int direction = random(4);
       if (direction > 1)
       {
-        comp_mode_random_speed = comp_mode_random_speed + randNumber;
+        horizontal_speed = horizontal_speed + randNumber;
       }
       else
       {
-        comp_mode_random_speed = comp_mode_random_speed - randNumber;
+        horizontal_speed = horizontal_speed - randNumber;
       }
     }
   }
@@ -59,8 +59,9 @@ private:
 
   void init()
   {
-    comp_mode_random_speed = 240;
+    horizontal_speed = 240;
     // dataProvider = DataProvider::getInstance();
+    GhudDevice::waitForFrame();
     GhudDevice::clearScreen();
   }
 
@@ -73,28 +74,35 @@ private:
 
     // getRandomSpeed();
 
+    GhudDevice::waitForFrame();
+    GhudDevice::clearScreen();
+
     DataPoint dp = DataProvider::getInstance().getDataPoint();
-    comp_mode_random_speed = int (sqrt(dp.velN * dp.velN + dp.velE * dp.velE)*3.6);
+    horizontal_speed = int (sqrt(dp.velN * dp.velN + dp.velE * dp.velE)*3.6);
     hMSL = int(dp.hMSL);
     // int angle = millis()/100 % 360;
     int angle = int(dp.heading);
-    if (angle != prev_angle){
-      GhudDevice::clearScreen();
-      prev_angle = angle;
-    }
-    GhudDevice::waitForFrame();
-    GhudDevice::displayString("Alt", 0x53, 30, 0);
+    // if (angle != prev_angle){
+    //   GhudDevice::clearScreen();
+    //   prev_angle = angle;
+    // }
+    // GhudDevice::waitForFrame();
+
+    GhudDevice::setFontId(1);
+
+    GhudDevice::displayString("Alt", 0x53, 30, 10);
 
     sprintf(alt, "%d", hMSL);
     // if (prev_hMSL != hMSL){
     //   sprintf(prev_alt, "%d", prev_hMSL );
     //   GhudDevice::displayString(prev_alt, 0x00, 120, 0);
     // }
-    GhudDevice::displayString(alt, 0x77, 120, 0);
+    GhudDevice::displayString(alt, 0x77, 120, 10);
     GhudDevice::drawLine(11, 40, 233, 40, 0x6C);
 
     // GhudDevice::setFontId(2);
-    GhudDevice::displayDigits(comp_mode_random_speed, comp_mode_prev_random);
+    // GhudDevice::displayDigits(horizontal_speed, horizontal_speed_prev);
+    GhudDevice::displayDigits(horizontal_speed);
 
     // GhudDevice::drawRect(11, 150, 223, 65, 0x6C);
     GhudDevice::drawLine(11, 150, 233, 150, 0x6C);
@@ -105,11 +113,12 @@ private:
     {
       checkLane();
     } else {
-      GhudDevice::displayString("Not in freefall", 0x77, 30, 180);
+      GhudDevice::setFontId(1);
+      GhudDevice::displayString("Not in freefall", 0x77, 20, 190);
       GhudDevice::drawArrow(120, 175, angle);
 
     }
 
-    comp_mode_prev_random = comp_mode_random_speed;
+    horizontal_speed_prev = horizontal_speed;
   }
 };

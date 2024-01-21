@@ -3,11 +3,12 @@
 #include "../config.h"
 #include "DisplayDevice.hpp"
 #include <math.h>
+#include <Fonts/FreeMonoBold12pt7b.h>
 
 // https://rop.nl/truetype2gfx/
 // https://tchapi.github.io/Adafruit-GFX-Font-Customiser/
 #include "../../fonts/Inconsolata_Bold30pt7b.h"
-#include "../../fonts/NotoSans_Bold10pt7b.h"
+// #include "../../fonts/NotoSans_Bold10pt7b.h"
 // #include "../../fonts/NotoSans_Bold15pt7b.h"
 
 #define _DEBUG
@@ -18,7 +19,7 @@
 class CompositeDisplay : public DisplayDevice
 {
 private:
-  int DEFAULT_COLOR = TFT_MAROON;
+  int DEFAULT_COLOR = (int)0x5C;
   int GLOBAL_COLOR = DEFAULT_COLOR;
 
   ESP_8_BIT_GFX videoOut = ESP_8_BIT_GFX(true /* = NTSC */, 8 /* = RGB332 color */);
@@ -29,7 +30,7 @@ public:
     videoOut.begin();
     videoOut.setRotation(3);
     videoOut.setTextSize(2);
-    videoOut.copyAfterSwap = true;
+    // videoOut.copyAfterSwap = true;
     Serial.println("Composite Video initiated");
   }
 
@@ -38,13 +39,17 @@ public:
     switch (id)
     {
     case 1:
+      videoOut.setFont(&FreeMonoBold12pt7b);
+      videoOut.setTextSize(1);
+      break;
+    // case 2:
+    //   videoOut.setFont(&Inconsolata_Bold30pt7b);
+    //   break;
+    // case 3:
+    //   videoOut.setFont(&NotoSans_Bold10pt7b);
+    //   break;
+    default:
       videoOut.setFont();
-      break;
-    case 2:
-      videoOut.setFont(&Inconsolata_Bold30pt7b);
-      break;
-    case 3:
-      videoOut.setFont(&NotoSans_Bold10pt7b);
       break;
     }
   }
@@ -104,7 +109,7 @@ public:
 
       if (previous != 0)
       {
-        videoOut.setTextColor(TFT_BLACK, TFT_BLACK);
+        videoOut.setTextColor(0x00, 0x00);
         videoOut.setCursor(c_x, c_y);
         videoOut.print(String(previous));
       }
@@ -112,7 +117,7 @@ public:
       {
         videoOut.fillScreen(0);
       }
-      videoOut.setTextColor(0x54, TFT_BLACK);
+      videoOut.setTextColor(0x54, 0x00);
       videoOut.setTextWrap(false);
       // videoOut.setTextSize(10);
       // videoOut.setTextColor(TFT_BLUE);
@@ -125,9 +130,32 @@ public:
       videoOut.setTextSize(2);
   }
 
+
+  void displayDigits(int current)
+  {
+    int c_x = 35;
+    int c_y = 135;
+ 
+    videoOut.setFont(&Inconsolata_Bold30pt7b);
+    videoOut.setTextSize(2);
+    videoOut.setTextColor(0x54);
+    videoOut.setTextWrap(false);
+
+    videoOut.setCursor(c_x, c_y);
+
+    videoOut.print(current);
+    // videoOut.write('b');
+
+    videoOut.setFont();
+    videoOut.setTextSize(2);
+  }
+
+
+
+
   void clearScreen()
   {
-    videoOut.fillScreen(TFT_BLACK);
+    videoOut.fillScreen(0x00);
   }
 
   void displayString(char *string, int color, int x, int y)
@@ -135,6 +163,7 @@ public:
 
     GLOBAL_COLOR = color;
     // videoOut.waitForFrame();
+
     videoOut.setCursor(x, y + 20);
     videoOut.setTextWrap(false);
     videoOut.setTextColor(GLOBAL_COLOR);
@@ -146,10 +175,10 @@ public:
   {
 
     // videoOut.waitForFrame();
-    //  videoOut.setFont(&NotoSans_Bold10pt7b);
+    // videoOut.setFont(&FreeSans9pt7b);
     videoOut.setCursor(x, y + 20);
     videoOut.setTextWrap(false);
-    videoOut.setTextColor(TFT_BLUE);
+    videoOut.setTextColor(0x2F);
     // Serial.println(string);
     videoOut.print(string);
   }

@@ -133,7 +133,7 @@ public:
             }
 
 #ifdef MOCK_DEBUG
-            Serial.println(line_orig);
+            // Serial.println(line_orig);
             Serial.print("ts=");Serial.print(_curDp.ts);
             Serial.print(" lat=");Serial.print(_curDp.lat);
             Serial.print(" lon=");Serial.print(_curDp.lon);

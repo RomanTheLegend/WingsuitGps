@@ -4,7 +4,7 @@
 //#define USE_TTV
 
 #ifdef USE_TGO
-    #include <TFT_eSPI.h>
+    // #include <TFT_eSPI.h>
     #include "devices/CompositeDisplay.cpp"
     #define MENU_SPACING_X  10
     #define MENU_SPACING_Y  20

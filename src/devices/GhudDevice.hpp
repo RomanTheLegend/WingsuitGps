@@ -1,6 +1,7 @@
 namespace GhudDevice {
     void init();
     void displayDigits(int current, int previous);
+    void displayDigits(int current);
     void displayString(char* string, int x, int y);
     void displayString(char* string, int color, int x, int y);
     void displaySide();
