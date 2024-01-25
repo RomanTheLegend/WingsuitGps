@@ -10,6 +10,7 @@ class DataProvider
 private:
     DataPoint timeseries[SLOPE_LEN];
     DataPoint curDp;
+    DataPoint exitDp;
     GpsInterface& gps;
 
     long long exitTs = 0;
@@ -30,9 +31,22 @@ private:
         array[size - 1] = value;
     }
 
+    void printDouble( double val, unsigned int precision){
+
+        Serial.print (int(val));  //prints the int part
+        Serial.print("."); // print the decimal point
+        unsigned int frac;
+        if(val >= 0)
+            frac = (val - int(val)) * precision;
+        else
+            frac = (int(val)- val ) * precision;
+        Serial.print(frac,DEC) ;
+    } 
+ 
+
     double getSlope()
     {
-        double sumx = 0, sumy = 0, sumxx = 0, sumxy = 0;
+        float sumx = 0, sumy = 0, sumxx = 0, sumxy = 0;
 
         for (int i = 0; i <= SLOPE_LEN - 1; ++i)
         {
@@ -47,6 +61,8 @@ private:
 
         int n = SLOPE_LEN;
         double slope = (sumxy - sumx * sumy / n) / (sumxx - sumx * sumx / n);
+        // Serial.print("sumx: "); Serial.print(sumx); Serial.print(" sumy: "); Serial.print(sumy);Serial.print(" sumxx: "); Serial.print(sumxx);Serial.print(" sumxy: "); Serial.print(sumxy);
+        // Serial.print("Slope: ");printDouble(slope,6);
         return slope;
     }
 
@@ -64,20 +80,31 @@ private:
 
         double a = (g - timeseries[p].velD) / (timeseries[c].velD - timeseries[p].velD);
         // Check vertical speed
-        if (a < 0 || 1 < a)
+        if (a < 0 || 1 < a){
+            // Serial.println();
             return false;
+        }
 
         // Check accuracy
         double vAcc = timeseries[p].vAcc + a * (timeseries[c].vAcc - timeseries[p].vAcc);
-        if (vAcc > 10)
+        if (vAcc > 10){
+            // Serial.println();
             return false;
-
+        }
         // Check acceleration
         double az = timeseries[p].az + a * (timeseries[c].az - timeseries[p].az);
-        if (az < g / 5.)
+        if (az < g / 5.){
+            // Serial.println();
             return false;
+        }
 
-        exitTs = (long long)(timeseries[p].ts + a * (timeseries[c].ts - timeseries[p].ts) - g / az * 1000.);
+        int t_diff = timeseries[c].ts - timeseries[p].ts;
+        exitTs = (long long)(timeseries[p].ts + a * t_diff - g / az * 1000.);
+        // Serial.print("Exit! ");Serial.print(exitTs);
+        // Serial.print(" p.ts: ");Serial.print(timeseries[p].ts); Serial.print(" c.ts: ");Serial.print(timeseries[c].ts);Serial.print(" a: ");Serial.print(a);Serial.print(" az: ");Serial.print(az);
+        // Serial.print(" p.az: ");Serial.print(timeseries[p].az); Serial.print(" c.az: ");Serial.println(timeseries[c].az);
+
+        exitDp = curDp;
         alreadyFalling = true;
         return alreadyFalling;
     }
@@ -118,9 +145,14 @@ public:
         }
     }
 
-    long getExitTs()
+    long long getExitTs()
     {
         return exitTs;
+    }
+
+    DataPoint getExitDp()
+    {
+        return exitDp;
     }
 
     DataPoint getDataPoint()
