@@ -129,16 +129,18 @@ def update_readings(window, csv_reader, labels, references):
         elif readings_key == 'vspeed':
             readings_data["ref"].set(f"{point.velD*3.6:.0f}")
         elif readings_key == 'hmsl':
+            readings_data["ref"].set(f"{point.hMSL:.0f}")
+        elif readings_key == 'alt':
             readings_data["ref"].set(f"{current_alt:.0f}")
         elif readings_key == 'totalSpeed':
             readings_data["ref"].set(f"{DataPoint.totalSpeed(point)*3.6:.0f}")
 
-        if start_dp is not None and finish_dp is not None and current_alt <= 1400:
+        if start_dp is not None and finish_dp is not None and current_alt <= 1490:
             time = finish_dp.t - start_dp.t;
             coords_1 = (start_dp.lat, start_dp.lon)
             coords_2 = (finish_dp.lat, finish_dp.lon)
             distance = geopy.distance.geodesic(coords_1, coords_2).km
-            speed = distance / time
+            speed = distance / time * 3600
             score.set(f"Time:  {time:.4f}\n"
                       f"Dist:  {distance:.5f}\n"
                       f"Speed: {speed:.3f}")
