@@ -25,6 +25,9 @@ def detect_freefall(timeseries):
 
     p, c = SLOPE_LEN - 2, SLOPE_LEN - 1
 
+    if timeseries[c].velD == timeseries[p].velD:
+        return None
+
     a = (g - timeseries[p].velD) / (timeseries[c].velD - timeseries[p].velD)
     if a < 0 or a > 1:
         return None

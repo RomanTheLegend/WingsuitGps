@@ -136,7 +136,7 @@ def update_readings(window, csv_reader, labels, references):
             readings_data["ref"].set(f"{DataPoint.totalSpeed(point)*3.6:.0f}")
 
         if start_dp is not None and finish_dp is not None and current_alt <= 1490:
-            time = finish_dp.t - start_dp.t;
+            time = finish_dp.t - start_dp.t
             coords_1 = (start_dp.lat, start_dp.lon)
             coords_2 = (finish_dp.lat, finish_dp.lon)
             distance = geopy.distance.geodesic(coords_1, coords_2).km
