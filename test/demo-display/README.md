@@ -1,5 +1,7 @@
 # Display simulator for Wingsuit
 
+![Screenshot](/images/flyscope_demo.png "FlyScope screenshot")
+
 ### Installation
 
 ```shell
