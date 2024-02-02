@@ -1,0 +1,71 @@
+{
+  "hmsl": {
+    "x": 60,
+    "y": 10,
+    "font_size": 20,
+    "font_id": 2
+  },
+  "gl": {
+    "x": 160,
+    "y": 10,
+    "font_size": 20,
+    "font_id": 1,
+    "color": "lightgreen"
+  },
+  "totalSpeed": {
+    "x": 60,
+    "y": 60,
+    "font_size": 50,
+    "font_id": 1,
+    "color": "blue"
+  },
+  "hspeed": {
+    "x": 60,
+    "y": 130,
+    "font_size": 50,
+    "font_id": 2
+  },
+  "vspeed": {
+    "x": 60,
+    "y": 200,
+    "font_size": 50,
+    "font_id": 2
+  },
+
+
+  "labels": {
+    "Alt": {
+      "x": 20,
+      "y": 17,
+      "font_size": 15,
+      "font_id": 2
+    },
+    "GL": {
+      "x": 130,
+      "y": 22,
+      "font_size": 10,
+      "font_id": 2,
+      "color": "lightgreen"
+    },
+    "Vtotal": {
+      "x": 20,
+      "y": 110,
+      "font_size": 10,
+      "font_id": 2,
+      "color": "blue"
+    },
+    "Vh": {
+      "x": 20,
+      "y": 175,
+      "font_size": 10,
+      "font_id": 2
+    },
+    "Vd": {
+      "x": 20,
+      "y": 245,
+      "font_size": 10,
+      "font_id": 2,
+      "color": "lightgreen"
+    }
+  }
+}
