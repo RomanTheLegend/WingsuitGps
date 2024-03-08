@@ -7,7 +7,7 @@
 #include "ModeManager.hpp"
 
 #define MENU_POSITIONS 6
-#define MAX_ITEMS_DISPLAYED 4
+#define MAX_ITEMS_DISPLAYED 3
 
 
 
@@ -69,7 +69,7 @@ void processInput(ButtonEvent event){
 
 
 void display(){
-  GhudDevice::waitForFrame();
+  // GhudDevice::waitForFrame();
   if (refreshMenuScreen){
     GhudDevice::clearScreen();
     GhudDevice::displayString("Select mode:", 22 , 10);
@@ -94,16 +94,19 @@ void display(){
     // int end = 3;
     for (int i=start_index; i< end_index; i++){
       char buffer[25];
+      byte offset = 0;
       if (i+1==cursor_position){
         sprintf(buffer, "* %s", menu_items[i]);
+        offset = 10;
       }  else {
         sprintf(buffer, "  %s", menu_items[i]);
       }    
       // Serial.println(buffer);
       // GhudDevice::displayString(buffer, 20 + MENU_SPACING_X, 10 + (i+1)*MENU_SPACING_Y);
-      GhudDevice::displayString(buffer, 20 + MENU_SPACING_X, 10 + (i-start_index+1)*MENU_SPACING_Y);
+      GhudDevice::displayString(buffer, 20 + MENU_SPACING_X - offset, 10 + (i-start_index+1)*MENU_SPACING_Y);
 
     }
+    // GhudDevice::releaseFrame();
     refreshMenuScreen=false;    
   }
   //delay(250);

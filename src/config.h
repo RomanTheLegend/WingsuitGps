@@ -5,9 +5,9 @@
 
 #ifdef USE_TGO
     // #include <TFT_eSPI.h>
-    #include "devices/CompositeDisplay.cpp"
+    #include "devices/ActiveLook.cpp"
     #define MENU_SPACING_X  10
-    #define MENU_SPACING_Y  20
+    #define MENU_SPACING_Y  40
     #define TX_PIN 27
     #define RX_PIN 26
     #define BUTTON_UP     35
@@ -15,10 +15,5 @@
     #define ADC_EN              14  //ADC_EN is the ADC detection enable port
     #define ADC_PIN             34
 #endif
-
-// static enum fgHudFonts = [
-//     SYSTEM,
-
-// ] 
 
 

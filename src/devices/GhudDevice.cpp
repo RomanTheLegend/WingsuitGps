@@ -2,66 +2,99 @@
 #include "GhudDevice.hpp"
 #include "../config.h"
 
-namespace GhudDevice {
+namespace GhudDevice
+{
 
-    DisplayDevice* const ghudDevice = new CompositeDisplay();
+    DisplayDevice *const ghudDevice = new ActiveLookDisplay();
 
-
-    void init(){
-        ghudDevice -> init();
+    void init()
+    {
+        ghudDevice->init();
     }
 
-    void displayDigits(int current, int previous){
-        ghudDevice -> displayDigits( current,  previous);
+    void clearScreen()
+    {
+        ghudDevice->clearScreen();
     }
 
-    void displayDigits(int current){
-        ghudDevice -> displayDigits( current);
+    void setFontId(int id)
+    {
+        ghudDevice->setFontId(id);
     }
 
-
-    void displayString(char* string, int x, int y){
-        ghudDevice -> displayString(string,  x,  y);
+    void setColor(int id)
+    {
+        ghudDevice->setColor(id);
     }
 
-    void displayString(char* string, int color, int x, int y){
-        ghudDevice -> displayString(string, color, x,  y);
+    void displayIcon(int id, int x, int y)
+    {
+        ghudDevice->displayIcon(id, x, y);
     }
 
-    void displaySide(){
-        ghudDevice -> displaySide();
+    void displayDigits(int current, int previous)
+    {
+        ghudDevice->displayDigits(current, previous);
     }
 
-    void displayTop(){
-        ghudDevice -> displayTop();
+    void displayDigits(int current)
+    {
+        ghudDevice->displayDigits(current);
     }
 
-    void clearScreen(){
-        ghudDevice -> clearScreen();
+    void displayString(int num, int x, int y)
+    {
+        ghudDevice->displayString(num, x, y);
     }
 
-    void waitForFrame(){
-        ghudDevice -> waitForFrame();
+    void displayString(char *string, int x, int y)
+    {
+        ghudDevice->displayString(string, x, y);
     }
 
-    void setRotation(int r){
-        ghudDevice -> setRotation(r);
+    void displayString(std::string data, int x, int y)
+    {
+        ghudDevice->displayString(data, x, y);
     }
 
-    void setFontId(int r){
-        ghudDevice -> setFontId(r);
+    void displayString(std::string data, int color, int x, int y)
+    {
+        ghudDevice->displayString(data, color, x, y);
     }
 
-    void drawRect(int x,int y, int h, int w, int  c ){
-        ghudDevice -> drawRect(x,y,h,w,c);
+    void displayString(std::string data, int size, int color, int x, int y)
+    {
+        ghudDevice->displayString(data, size, color, x, y);
     }
 
-    void drawLine(int x,int y, int x1, int y1, int  c ){
-        ghudDevice -> drawLine(x,y,x1,y1,c);
+    void drawRect(int x, int y, int h, int w, int c)
+    {
+        ghudDevice->drawRect(x, y, h, w, c);
     }
 
-    void drawArrow(int center_x, int center_y, int angle){
-        ghudDevice -> drawArrow (center_x, center_y, angle);
+    void drawLine(int x, int y, int x1, int y1, int c)
+    {
+        ghudDevice->drawLine(x, y, x1, y1, c);
+    }
+
+    void drawArrow(int cX, int cY, int angle)
+    {
+        ghudDevice->drawArrow(cX, cY, angle);
+    }
+
+    void setRotation(int r)
+    {
+        ghudDevice->setRotation(r);
+    }
+
+    void waitForFrame()
+    {
+        ghudDevice->waitForFrame();
+    }
+
+    void releaseFrame()
+    {
+        ghudDevice->releaseFrame();
     }
 
 }

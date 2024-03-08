@@ -10,30 +10,10 @@ private:
   // DataProvider dataProvider;
   DataPoint targetDp;
 
-  int horizontal_speed = 240;
-  int hMSL = 0;
-  char alt[4];
+  int horizontal_speed, vertical_speed, hMSL, countdown = 0;
+  int prev_hs, prev_vs, prev_hMSL, prev_countdown = 0;
 
-  // void getRandomSpeed()
-  // {
-  //   int randNumber = random(3);
-  //   if (horizontal_speed < randNumber)
-  //   {
-  //     horizontal_speed = horizontal_speed + randNumber;
-  //   }
-  //   else
-  //   {
-  //     int direction = random(4);
-  //     if (direction > 1)
-  //     {
-  //       horizontal_speed = horizontal_speed + randNumber;
-  //     }
-  //     else
-  //     {
-  //       horizontal_speed = horizontal_speed - randNumber;
-  //     }
-  //   }
-  // }
+  bool refreshScreen=true;
 
   double haversine(double lat1, double lon1, double lat2, double lon2)
   {
@@ -80,22 +60,23 @@ private:
 
       bool left_side = isLeft(exitDp.lat, exitDp.lon, targetDp.lat, targetDp.lon, dp.lat, dp.lon);
 
-      char c_dist[4];
-      char side[1];
-      sprintf(c_dist, "%d", dist);
-      // sprintf(side, "%c", left_side ? 'L' : 'R');
+      // char side[1] = left_side ? 'L' : 'R';
 
-      GhudDevice::displayString("Deviation: ", 0x77, 30, 180);
-      GhudDevice::displayString(c_dist, 0x77, 150, 180);
-      // GhudDevice::displayString(side, 0x77, 180, 180);
+      GhudDevice::displayString("Deviation: ", 30, 180);
+      GhudDevice::displayString(dist, 150, 180);
+      // GhudDevice::displayString(side, 180, 180);
     }
     else
     {
-      GhudDevice::displayString("Lane lock in ", 0x77, 30, 180);
+      GhudDevice::displayString("Lane lock in", 0, 180);
       int lock_countdown = 10 - secondsSinceExit;
-      char c_time[2];
-      sprintf(c_time, "%d", lock_countdown);
-      GhudDevice::displayString(c_time, 0x77, 190, 180);
+      // GhudDevice::displayString(prev_countdown, 190, 180);
+      // GhudDevice::displayString(lock_countdown, 190, 180);
+      // if (lock_countdown != prev_countdown){
+      //   GhudDevice::displayString(std::to_string(prev_countdown), 2 , 0, 220, 180);
+      //   GhudDevice::displayString(std::to_string(lock_countdown), 2 , 1, 220, 180);
+      //   prev_countdown = lock_countdown;
+      // }
       // GhudDevice::drawArrow(120, 175, dp.heading);
     }
   }
@@ -103,7 +84,6 @@ private:
 public:
   void init()
   {
-    horizontal_speed = 240;
     targetDp.lat = 49.459110;
     targetDp.lon = 17.099134;
     // targetDp.lat = 49.489993;
@@ -119,26 +99,42 @@ public:
   void display()
   {
 
-    // getRandomSpeed();
-
     GhudDevice::waitForFrame();
-    GhudDevice::clearScreen();
+    // GhudDevice::clearScreen();
 
     DataPoint dp = DataProvider::getInstance().getDataPoint();
     horizontal_speed = int(sqrt(dp.velN * dp.velN + dp.velE * dp.velE) * 3.6);
+    vertical_speed = int(dp.velD * 3.6);
     hMSL = int(dp.hMSL);
     // int angle = millis()/100 % 360;
     int angle = int(dp.heading);
 
-    GhudDevice::setFontId(1);
+    // GhudDevice::setFontId(1);
 
-    GhudDevice::displayString("Alt", 0x53, 30, 10);
+    //V-speed
+    GhudDevice::displayString("v", 10, 90);
+    GhudDevice::displayIcon(48,80,133);
+    if (vertical_speed != prev_vs){
+      GhudDevice::displayString(std::to_string(prev_vs), 3 , 0, 100, 67);
+      GhudDevice::displayString(std::to_string(vertical_speed), 3 , 1,  100, 67);
+      prev_vs = vertical_speed;
+    }
+        //H-speed
+    GhudDevice::displayString("h", 10, 30);
+    GhudDevice::displayIcon(48,80,70);
+    if (horizontal_speed != prev_hs){
+      GhudDevice::displayString(std::to_string(prev_hs), 3 , 0, 100, 5);
+      GhudDevice::displayString(std::to_string(horizontal_speed), 3 , 1,  100, 5);
+      prev_hs = horizontal_speed;
+    }
 
-    sprintf(alt, "%d", hMSL);
-    GhudDevice::displayString(alt, 0x77, 120, 10);
-    GhudDevice::drawLine(11, 40, 233, 40, 0x6C);
-
-    GhudDevice::displayDigits(horizontal_speed);
+    // Altitude
+      GhudDevice::displayIcon(34,50,20);
+    // if (hMSL != prev_hMSL){
+      // GhudDevice::displayString(prev_hMSL, 70, -20);
+      GhudDevice::displayString(hMSL, 70, -20);
+      prev_hMSL = hMSL;
+    // }
 
     GhudDevice::drawLine(11, 150, 233, 150, 0x6C);
 
@@ -151,7 +147,7 @@ public:
     else
     {
       GhudDevice::setFontId(1);
-      GhudDevice::displayString("Not in freefall", 0x77, 20, 190);
+      // GhudDevice::displayString("Not in freefall", 20, 190);
       GhudDevice::drawArrow(120, 175, angle);
     }
   }
