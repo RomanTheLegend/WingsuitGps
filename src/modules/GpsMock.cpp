@@ -3,6 +3,7 @@
 #include <HardwareSerial.h>
 #include "GpsInterface.hpp"
 #include "../common.h"
+#include <string>
 #include <TimeLib.h>
 
 // #define MOCK_DEBUG
@@ -13,10 +14,9 @@ private:
     DataPoint curDp;
     DataPoint _curDp;
 
-    long long convertToUnixEpoch(const String &rawString)
+    long long convertToUnixEpoch(const std::string &rawString)
     {
-        char timeString[24];
-        rawString.toCharArray(timeString, 24);
+        const char* timeString = rawString.c_str();
         TimeElements tm;
         int year, month, day, hour, minute, second;
 
@@ -59,13 +59,14 @@ public:
 
             int pos = 0;
             int field = 0;
-            String token;
+            std::string token;
 
             //ToDo: fix bug with parsing last field - i.e. when there's no last comma
             while ((pos = line.indexOf(',')) != -1)
             {
                 field++;
-                token = line.substring(0, pos);
+                // token = line.substring(0, pos);
+                token.assign(line.substring(0, pos).c_str());
                 // Serial.print("#");Serial.println(field);
                 // Serial.print(" pos=");Serial.println(pos);
                 // Serial.print(" token=");Serial.println(token);
@@ -82,51 +83,51 @@ public:
                     break;
 
                 case 2:
-                    _curDp.lat = token.toFloat();
+                    _curDp.lat = std::stof(token);
                     break;
 
                 case 3:
-                    _curDp.lon = token.toFloat();
+                    _curDp.lon = std::stof(token);
                     break;
 
                 case 4:
-                    _curDp.hMSL = token.toFloat();
+                    _curDp.hMSL = std::stof(token);
                     break;
 
                 case 5:
-                    _curDp.velN = token.toFloat();
+                    _curDp.velN = std::stof(token);
                     break;
 
                 case 6:
-                    _curDp.velE = token.toFloat();
+                    _curDp.velE = std::stof(token);
                     break;
 
                 case 7:
-                    _curDp.velD = token.toFloat();
+                    _curDp.velD = std::stof(token);
                     break;
 
                 case 8:
-                    _curDp.hAcc = token.toFloat();
+                    _curDp.hAcc = std::stof(token);
                     break;
 
                 case 9:
-                    _curDp.vAcc = token.toFloat();
+                    _curDp.vAcc = std::stof(token);
                     break;
 
                 case 10:
-                    _curDp.sAcc = token.toFloat();
+                    _curDp.sAcc = std::stof(token);
                     break;
 
                 case 11:
-                    _curDp.heading = token.toFloat();
+                    _curDp.heading = std::stof(token);
                     break;
 
                 case 12:
-                    _curDp.cAcc = token.toFloat();
+                    _curDp.cAcc = std::stof(token);
                     break;
 
                 case 14:
-                    _curDp.numSV = token.toFloat();
+                    _curDp.numSV = std::stoi(token);
                     break;
                 }
                 

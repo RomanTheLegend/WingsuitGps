@@ -128,6 +128,11 @@ public:
       prev_hs = horizontal_speed;
     }
 
+
+      // GhudDevice::displayIcon(34,50,20);
+    GhudDevice::displayString(std::to_string(dp.numSV), 1, 1, 200, 5);
+    GhudDevice::displayString("GPS",  1 , 1, 190, -20);
+
     // Altitude
       GhudDevice::displayIcon(34,50,20);
     // if (hMSL != prev_hMSL){

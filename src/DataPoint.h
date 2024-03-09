@@ -155,7 +155,7 @@ public:
         return dp.sAcc;
     }
 
-    static double numberOfSatellites(const DataPoint &dp)
+    static int numberOfSatellites(const DataPoint &dp)
     {
         return dp.numSV;
     }
