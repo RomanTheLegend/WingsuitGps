@@ -21,9 +21,6 @@
 #define FRAME_W 304
 #define FRAME_H 256
 
-
-static const char *LOG_TAG = "ActiveLookDevice";
-
 class MyBLEClientCallbacks : public NimBLEClientCallbacks
 {
   void onConnect(NimBLEClient *pClient)
@@ -42,6 +39,9 @@ class ActiveLookDisplay : public DisplayDevice
 
 private:
   NimBLERemoteCharacteristic *pRemoteCharacteristic;
+  NimBLEClient *pClient;
+  bool connected = false;
+  const char *LOG_TAG = "ActiveLookDevice";
 
   uint8_t *uShortToList(short value)
   {
@@ -107,15 +107,15 @@ private:
 
   std::vector<uint8_t> formatFrame(uint8_t cmdId)
   {
-      std::vector<uint8_t> payload;
-      std::vector<uint8_t> queryId;
-      return formatFrame(cmdId, &payload, &queryId);
+    std::vector<uint8_t> payload;
+    std::vector<uint8_t> queryId;
+    return formatFrame(cmdId, &payload, &queryId);
   }
 
   std::vector<uint8_t> formatFrame(uint8_t cmdId, std::vector<uint8_t> *payload)
   {
-      std::vector<uint8_t> queryId;
-      return formatFrame(cmdId, payload, &queryId);
+    std::vector<uint8_t> queryId;
+    return formatFrame(cmdId, payload, &queryId);
   }
 
   std::vector<uint8_t> formatFrame(uint8_t cmdId, std::vector<uint8_t> *payload, std::vector<uint8_t> *queryId)
@@ -176,25 +176,27 @@ private:
     pRemoteCharacteristic->writeValue(command2, false);
   }
 
-public:
-  void init()
+  bool connect()
   {
-    NimBLEDevice::init("");
-    NimBLEClient *pClient = NimBLEDevice::createClient();
-
-    pClient->setClientCallbacks(new MyBLEClientCallbacks());
 
     NimBLEAddress address(DEVICE_ADDRESS);
-    pClient->connect(address);
+    try
+    {
+      pClient->connect(address);
+    }
+    catch (...)
+    {
+      return false;
+    }
 
-    ESP_LOGD(LOG_TAG, "Donnected to ActiveLook device");
+    ESP_LOGD(LOG_TAG, "Connected to ActiveLook device");
 
     NimBLEUUID serviceUUID(SERVICE_UUID);
     NimBLERemoteService *pRemoteService = pClient->getService(serviceUUID);
     if (pRemoteService == nullptr)
     {
       ESP_LOGE(LOG_TAG, "Failed to find service");
-      return;
+      return false;
     }
 
     // Get the characteristic
@@ -203,8 +205,19 @@ public:
     if (pRemoteCharacteristic == nullptr)
     {
       ESP_LOGE(LOG_TAG, "Failed to find characteristic");
-      return;
+      return false;
     }
+  }
+
+public:
+  void init()
+  {
+    NimBLEDevice::init("");
+    pClient = NimBLEDevice::createClient();
+
+    pClient->setClientCallbacks(new MyBLEClientCallbacks());
+
+    connected = connect();
   }
 
   void clearScreen()
@@ -233,8 +246,6 @@ public:
     pRemoteCharacteristic->writeValue(command, false);
   }
 
-
-
   void displayDigits(int current, int previous)
   {
     displayDemo();
@@ -245,15 +256,14 @@ public:
     displayDemo();
   }
 
-
   void displayString(int num, int x, int y)
   {
     std::string data = std::to_string(num);
     displayString(data, x, y);
   }
 
-
-  void displayString(char *string, int x, int y){
+  void displayString(char *string, int x, int y)
+  {
     std::string data(string);
     displayString(data, x, y);
   }
@@ -261,7 +271,7 @@ public:
   void displayString(std::string data, int x, int y)
   {
     displayString(data, 1, x, y);
-  }
+   }
 
   void displayString(std::string data, int color, int x, int y)
   {
@@ -270,14 +280,14 @@ public:
 
   void displayString(std::string data, int size, int color, int x, int y)
   {
-    std::vector<uint8_t> payload(data.length() + 8);
-    std::vector<uint8_t> queryId;
-    text(FRAME_W - x, FRAME_H - y, 4, size, color, data, &payload);
-    const std::vector<uint8_t> command = formatFrame(0x37, &payload, &queryId);
-    pRemoteCharacteristic->writeValue(command, false);
+    // if (connected){
+      std::vector<uint8_t> payload(data.length() + 8);
+      std::vector<uint8_t> queryId;
+      text(FRAME_W - x, FRAME_H - y, 4, size, color, data, &payload);
+      const std::vector<uint8_t> command = formatFrame(0x37, &payload, &queryId);
+      pRemoteCharacteristic->writeValue(command, false);
+    // }
   }
-
-
 
   void drawRect(int x, int y, int h, int w, int c)
   {

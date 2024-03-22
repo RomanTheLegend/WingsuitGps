@@ -1,6 +1,6 @@
 #include "DataPoint.h"
 
-#define PI          3.14159265359
+// #define PI          3.14159265359
 
 #define A_GRAVITY   9.80665     // Standard acceleration due to gravity (m/s^2)
 #define SL_PRESSURE 101325      // Sea level pessure (Pa)

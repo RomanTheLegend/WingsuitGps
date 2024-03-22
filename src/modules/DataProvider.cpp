@@ -2,6 +2,7 @@
 #include "../common.h"
 #include "GpsInterface.hpp"
 #include "GpsMock.cpp"
+#include "GpsReader.cpp"
 
 #define SLOPE_LEN 4
 
@@ -118,8 +119,13 @@ public:
 
     static DataProvider& getInstance()
     {
-        static DataProvider instance(GpsMock::getInstance());
+        static DataProvider instance(GpsReader::getInstance());
         return instance;
+    }
+
+    static void init(HardwareSerial &port)
+    {
+        GpsReader::getInstance().init(port);
     }
 
     void refresh()

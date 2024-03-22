@@ -37,6 +37,8 @@
 
 void processButtonInput();
 
+HardwareSerial serialGPS(2);
+
 void setup()
 {
   Serial.begin(115200);
@@ -51,8 +53,7 @@ void setup()
   
   //EEPROM.begin(EEPROM_SIZE);
   //clickCounter = EEPROM.read(0);
-
-
+  DataProvider::getInstance().init(serialGPS);
   Serial.println("G-HUD initialization done");
   ModeManager::displayMode((Mode)0);
 }
