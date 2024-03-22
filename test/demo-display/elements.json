@@ -10,7 +10,7 @@
     "y": 10,
     "font_size": 20,
     "font_id": 1,
-    "color": "lightgreen"
+    "color": "green"
   },
   "totalSpeed": {
     "x": 60,
@@ -45,7 +45,7 @@
       "y": 22,
       "font_size": 10,
       "font_id": 2,
-      "color": "lightgreen"
+      "color": "green"
     },
     "Vtotal": {
       "x": 20,
@@ -65,7 +65,7 @@
       "y": 245,
       "font_size": 10,
       "font_id": 2,
-      "color": "lightgreen"
+      "color": "green"
     }
   }
 }
