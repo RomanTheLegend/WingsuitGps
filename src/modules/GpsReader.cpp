@@ -65,14 +65,14 @@ public:
       Serial.print(" , Sats: ");
       Serial.println( ubx_gps->numSV);
 #endif
-    _curDp.velD =  ubx_gps->velD * 3.6;
-    _curDp.velE =  ubx_gps->velE * 3.6;
-    _curDp.velN =  ubx_gps->velN * 3.6;
-    _curDp.ts =  ubx_gps->nano;
-    _curDp.lat =  ubx_gps->lat;
-    _curDp.lon =  ubx_gps->lon;
-    _curDp.hMSL =  ubx_gps->hMSL;
-    _curDp.heading =  ubx_gps->heading;
+    _curDp.velD =  ubx_gps->velD * 0.0036;
+    _curDp.velE =  ubx_gps->velE * 0.0036;
+    _curDp.velN =  ubx_gps->velN * 0.0036;
+    _curDp.ts = long( ubx_gps->nano / 1000);
+    _curDp.lat =  ubx_gps->lat / 10000000.0;
+    _curDp.lon =  ubx_gps->lon / 10000000.0;
+    _curDp.hMSL =  ubx_gps->hMSL / 1000.0;
+    _curDp.heading =  ubx_gps->heading / 100000.0;
     _curDp.numSV =  ubx_gps->numSV;
 
 
