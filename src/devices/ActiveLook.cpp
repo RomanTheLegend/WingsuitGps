@@ -222,8 +222,12 @@ public:
 
   void clearScreen()
   {
-    const uint8_t command[] = {0xFF, 0x01, 0x00, 0x05, 0xAA};
-    pRemoteCharacteristic->writeValue(command, sizeof(command), false);
+    if (connected){
+      const uint8_t command[] = {0xFF, 0x01, 0x00, 0x05, 0xAA};
+      pRemoteCharacteristic->writeValue(command, sizeof(command), false);
+    } else{
+      ESP_LOGE(LOG_TAG, "Activelook not connected");
+    }
   }
 
   void setFontId(int id)
@@ -280,13 +284,15 @@ public:
 
   void displayString(std::string data, int size, int color, int x, int y)
   {
-    // if (connected){
+    if (connected){
       std::vector<uint8_t> payload(data.length() + 8);
       std::vector<uint8_t> queryId;
       text(FRAME_W - x, FRAME_H - y, 4, size, color, data, &payload);
       const std::vector<uint8_t> command = formatFrame(0x37, &payload, &queryId);
       pRemoteCharacteristic->writeValue(command, false);
-    // }
+    } else {
+      ESP_LOGE(LOG_TAG, "Activelook not connected");
+    }
   }
 
   void drawRect(int x, int y, int h, int w, int c)
