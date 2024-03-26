@@ -207,6 +207,7 @@ private:
       ESP_LOGE(LOG_TAG, "Failed to find characteristic");
       return false;
     }
+    return true;
   }
 
 public:
