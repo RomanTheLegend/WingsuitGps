@@ -10,10 +10,12 @@ private:
   // DataProvider dataProvider;
   DataPoint targetDp;
 
-  int horizontal_speed, vertical_speed, hMSL, countdown = 0;
-  int prev_hs, prev_vs, prev_hMSL, prev_countdown = 0;
+  int horizontal_speed= 0, vertical_speed= 0, hMSL= 0, gps = 0, countdown = 0;
+  int prev_hs= 0, prev_vs= 0, prev_hMSL= 0, prev_gps = -1 , prev_countdown = 0;
 
   bool refreshScreen=true;
+
+  const char *LOG_TAG = "Competition Mode";
 
   double haversine(double lat1, double lon1, double lat2, double lon2)
   {
@@ -90,6 +92,16 @@ public:
     // targetDp.lon = 20.028301;
     GhudDevice::waitForFrame();
     GhudDevice::clearScreen();
+
+
+    GhudDevice::displayString("v", 10, 90);
+    GhudDevice::displayIcon(48,80,133);
+
+    GhudDevice::displayString("h", 10, 30);
+    GhudDevice::displayIcon(48,80,70);
+
+    // Altitude
+    GhudDevice::displayIcon(34,50,20);
   }
 
   void processInput(ButtonEvent event)
@@ -112,17 +124,17 @@ public:
     // GhudDevice::setFontId(1);
 
     //V-speed
-    GhudDevice::displayString("v", 10, 90);
-    GhudDevice::displayIcon(48,80,133);
+
     if (vertical_speed != prev_vs){
+      ESP_LOGD(LOG_TAG, "V-speed");
       GhudDevice::displayString(std::to_string(prev_vs), 3 , 0, 100, 67);
       GhudDevice::displayString(std::to_string(vertical_speed), 3 , 1,  100, 67);
       prev_vs = vertical_speed;
     }
         //H-speed
-    GhudDevice::displayString("h", 10, 30);
-    GhudDevice::displayIcon(48,80,70);
+
     if (horizontal_speed != prev_hs){
+      ESP_LOGD(LOG_TAG, "H-speed");
       GhudDevice::displayString(std::to_string(prev_hs), 3 , 0, 100, 5);
       GhudDevice::displayString(std::to_string(horizontal_speed), 3 , 1,  100, 5);
       prev_hs = horizontal_speed;
@@ -130,16 +142,20 @@ public:
 
 
       // GhudDevice::displayIcon(34,50,20);
-    GhudDevice::displayString(std::to_string(dp.numSV), 1, 1, 200, 5);
-    GhudDevice::displayString("GPS",  1 , 1, 190, -20);
+    if (gps != prev_gps){
+      ESP_LOGD(LOG_TAG, "GPS");
+      GhudDevice::displayString(std::to_string(dp.numSV), 1, 1, 200, 5);
+      GhudDevice::displayString("GPS",  1 , 1, 190, -20);
+      prev_gps = gps;
+    }
 
-    // Altitude
-      GhudDevice::displayIcon(34,50,20);
-    // if (hMSL != prev_hMSL){
-      // GhudDevice::displayString(prev_hMSL, 70, -20);
+
+    if (hMSL != prev_hMSL){
+      ESP_LOGD(LOG_TAG, "HMSL");
+      GhudDevice::displayString(prev_hMSL, 70, -20);
       GhudDevice::displayString(hMSL, 70, -20);
       prev_hMSL = hMSL;
-    // }
+    }
 
     GhudDevice::drawLine(11, 150, 233, 150, 0x6C);
 
