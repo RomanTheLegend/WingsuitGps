@@ -223,10 +223,13 @@ public:
 
   void clearScreen()
   {
-    if (connected){
+    if (connected)
+    {
       const uint8_t command[] = {0xFF, 0x01, 0x00, 0x05, 0xAA};
       pRemoteCharacteristic->writeValue(command, sizeof(command), false);
-    } else{
+    }
+    else
+    {
       ESP_LOGE(LOG_TAG, "Activelook not connected");
     }
   }
@@ -237,18 +240,32 @@ public:
 
   void setColor(int id)
   {
-    std::vector<uint8_t> payload(1);
-    payload[0] = id;
-    const std::vector<uint8_t> command = formatFrame(0x30, &payload);
-    pRemoteCharacteristic->writeValue(command, false);
+    if (connected)
+    {
+      std::vector<uint8_t> payload(1);
+      payload[0] = id;
+      const std::vector<uint8_t> command = formatFrame(0x30, &payload);
+      pRemoteCharacteristic->writeValue(command, false);
+    }
+    else
+    {
+      ESP_LOGE(LOG_TAG, "Activelook not connected");
+    }
   }
 
   void displayIcon(int id, int x, int y)
   {
-    std::vector<uint8_t> payload(5);
-    img(id, FRAME_W - x, FRAME_H - y, &payload);
-    const std::vector<uint8_t> command = formatFrame(0x42, &payload);
-    pRemoteCharacteristic->writeValue(command, false);
+    if (connected)
+    {
+      std::vector<uint8_t> payload(5);
+      img(id, FRAME_W - x, FRAME_H - y, &payload);
+      const std::vector<uint8_t> command = formatFrame(0x42, &payload);
+      pRemoteCharacteristic->writeValue(command, false);
+    }
+    else
+    {
+      ESP_LOGE(LOG_TAG, "Activelook not connected");
+    }
   }
 
   void displayDigits(int current, int previous)
@@ -276,7 +293,7 @@ public:
   void displayString(std::string data, int x, int y)
   {
     displayString(data, 1, x, y);
-   }
+  }
 
   void displayString(std::string data, int color, int x, int y)
   {
@@ -285,13 +302,16 @@ public:
 
   void displayString(std::string data, int size, int color, int x, int y)
   {
-    if (connected){
+    if (connected)
+    {
       std::vector<uint8_t> payload(data.length() + 8);
       std::vector<uint8_t> queryId;
       text(FRAME_W - x, FRAME_H - y, 4, size, color, data, &payload);
       const std::vector<uint8_t> command = formatFrame(0x37, &payload, &queryId);
       pRemoteCharacteristic->writeValue(command, false);
-    } else {
+    }
+    else
+    {
       ESP_LOGE(LOG_TAG, "Activelook not connected");
     }
   }
@@ -306,53 +326,60 @@ public:
 
   void drawArrow(int cX, int cY, int angle)
   {
-    int c = 2;
-    int m = 3;
-    int x1, x2, x3, x4, x5, x6, x7;
-    int y1, y2, y3, y4, y5, y6, y7;
+    if (connected)
+    {
+      int c = 2;
+      int m = 3;
+      int x1, x2, x3, x4, x5, x6, x7;
+      int y1, y2, y3, y4, y5, y6, y7;
 
-    double radians = angle * M_PI / 180.0;
-    double sin_angle = sin(radians);
-    double cos_angle = cos(radians);
+      double radians = angle * M_PI / 180.0;
+      double sin_angle = sin(radians);
+      double cos_angle = cos(radians);
 
-    x1 = -2 * m;
-    x2 = -2 * m;
-    x3 = -4 * m;
-    x4 = 0;
-    x5 = +4 * m;
-    x6 = +2 * m;
-    x7 = +2 * m;
+      x1 = -2 * m;
+      x2 = -2 * m;
+      x3 = -4 * m;
+      x4 = 0;
+      x5 = +4 * m;
+      x6 = +2 * m;
+      x7 = +2 * m;
 
-    y1 = +5 * m;
-    y2 = -2 * m;
-    y3 = -2 * m;
-    y4 = -7 * m;
-    y5 = -2 * m;
-    y6 = -2 * m;
-    y7 = +5 * m;
+      y1 = +5 * m;
+      y2 = -2 * m;
+      y3 = -2 * m;
+      y4 = -7 * m;
+      y5 = -2 * m;
+      y6 = -2 * m;
+      y7 = +5 * m;
 
-    double new_x1 = x1 * cos_angle - y1 * sin_angle + cX;
-    double new_y1 = x1 * sin_angle + y1 * cos_angle + cY;
-    double new_x2 = x2 * cos_angle - y2 * sin_angle + cX;
-    double new_y2 = x2 * sin_angle + y2 * cos_angle + cY;
-    double new_x3 = x3 * cos_angle - y3 * sin_angle + cX;
-    double new_y3 = x3 * sin_angle + y3 * cos_angle + cY;
-    double new_x4 = x4 * cos_angle - y4 * sin_angle + cX;
-    double new_y4 = x4 * sin_angle + y4 * cos_angle + cY;
-    double new_x5 = x5 * cos_angle - y5 * sin_angle + cX;
-    double new_y5 = x5 * sin_angle + y5 * cos_angle + cY;
-    double new_x6 = x6 * cos_angle - y6 * sin_angle + cX;
-    double new_y6 = x6 * sin_angle + y6 * cos_angle + cY;
-    double new_x7 = x7 * cos_angle - y7 * sin_angle + cX;
-    double new_y7 = x7 * sin_angle + y7 * cos_angle + cY;
+      double new_x1 = x1 * cos_angle - y1 * sin_angle + cX;
+      double new_y1 = x1 * sin_angle + y1 * cos_angle + cY;
+      double new_x2 = x2 * cos_angle - y2 * sin_angle + cX;
+      double new_y2 = x2 * sin_angle + y2 * cos_angle + cY;
+      double new_x3 = x3 * cos_angle - y3 * sin_angle + cX;
+      double new_y3 = x3 * sin_angle + y3 * cos_angle + cY;
+      double new_x4 = x4 * cos_angle - y4 * sin_angle + cX;
+      double new_y4 = x4 * sin_angle + y4 * cos_angle + cY;
+      double new_x5 = x5 * cos_angle - y5 * sin_angle + cX;
+      double new_y5 = x5 * sin_angle + y5 * cos_angle + cY;
+      double new_x6 = x6 * cos_angle - y6 * sin_angle + cX;
+      double new_y6 = x6 * sin_angle + y6 * cos_angle + cY;
+      double new_x7 = x7 * cos_angle - y7 * sin_angle + cX;
+      double new_y7 = x7 * sin_angle + y7 * cos_angle + cY;
 
-    // videoOut.drawLine(new_x1, new_y1, new_x2, new_y2, c);
-    // videoOut.drawLine(new_x2, new_y2, new_x3, new_y3, c);
-    // videoOut.drawLine(new_x3, new_y3, new_x4, new_y4, c);
-    // videoOut.drawLine(new_x4, new_y4, new_x5, new_y5, c);
-    // videoOut.drawLine(new_x5, new_y5, new_x6, new_y6, c);
-    // videoOut.drawLine(new_x6, new_y6, new_x7, new_y7, c);
-    // videoOut.drawLine(new_x7, new_y7, new_x1, new_y1, c);
+      // videoOut.drawLine(new_x1, new_y1, new_x2, new_y2, c);
+      // videoOut.drawLine(new_x2, new_y2, new_x3, new_y3, c);
+      // videoOut.drawLine(new_x3, new_y3, new_x4, new_y4, c);
+      // videoOut.drawLine(new_x4, new_y4, new_x5, new_y5, c);
+      // videoOut.drawLine(new_x5, new_y5, new_x6, new_y6, c);
+      // videoOut.drawLine(new_x6, new_y6, new_x7, new_y7, c);
+      // videoOut.drawLine(new_x7, new_y7, new_x1, new_y1, c);
+    }
+    else
+    {
+      ESP_LOGE(LOG_TAG, "Activelook not connected");
+    }
   }
 
   void setRotation(int r)

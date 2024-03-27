@@ -127,16 +127,16 @@ public:
 
     if (vertical_speed != prev_vs){
       ESP_LOGD(LOG_TAG, "V-speed");
-      GhudDevice::displayString(std::to_string(prev_vs), 3 , 0, 100, 67);
-      GhudDevice::displayString(std::to_string(vertical_speed), 3 , 1,  100, 67);
+      GhudDevice::displayString(std::to_string(prev_vs), 4 , 0, 100, 67);
+      GhudDevice::displayString(std::to_string(vertical_speed), 4 , 1,  100, 67);
       prev_vs = vertical_speed;
     }
         //H-speed
 
     if (horizontal_speed != prev_hs){
       ESP_LOGD(LOG_TAG, "H-speed");
-      GhudDevice::displayString(std::to_string(prev_hs), 3 , 0, 100, 5);
-      GhudDevice::displayString(std::to_string(horizontal_speed), 3 , 1,  100, 5);
+      GhudDevice::displayString(std::to_string(prev_hs), 4 , 0, 100, 5);
+      GhudDevice::displayString(std::to_string(horizontal_speed), 4 , 1,  100, 5);
       prev_hs = horizontal_speed;
     }
 
@@ -167,9 +167,9 @@ public:
     }
     else
     {
-      GhudDevice::setFontId(1);
+      // GhudDevice::setFontId(1);
       // GhudDevice::displayString("Not in freefall", 20, 190);
-      GhudDevice::drawArrow(120, 175, angle);
+      // GhudDevice::drawArrow(120, 175, angle);
     }
   }
 };
